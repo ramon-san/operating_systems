@@ -14,15 +14,17 @@ void validate_new_conv(message_board *msg_controller);
  * Function to validate a new conversation can be created.
  *
  * @param msg_controller Main structure to control all messages in program.
+ * @param max_conv_number   Maximum number of conversation to process.
  *
  */
 
-void pass_to_controller(message_board *msg_controller, char* name);
+void pass_to_controller(message_board *msg_controller, char* name, int *position);
 /**
  * Function that passes data into the message_board object.
  * 
- * @param msg_controller Main structure to control all messages in program.
- * @param name Name of new person to add in structure.
+ * @param msg_controller    Main structure to control all messages in program.
+ * @param name              Name of new person to add in structure.
+ * @param position          Pass NULL if autoincrement, int address otherwise.
  * 
  */
 
