@@ -40,6 +40,11 @@ void pass_to_controller(message_board *msg_controller, char* name, int *position
         strcat(msg_controller->storage_ids[msg_controller->open_convs], name);
         msg_controller->open_convs++;
         msg_controller->total_convs++;
+    } else {
+        strcpy(msg_controller->conv_names[*position-1], name);
+        strcpy(msg_controller->storage_ids[*position-1], "/");
+        strcat(msg_controller->storage_ids[*position-1], name);
+        msg_controller->open_convs--;
     }
 }
 
@@ -53,7 +58,7 @@ int change_conv() {
     int change_to;
     printf("\n\tWho do you want to text: ");
     scanf(" %d", &change_to);
-    if (change_to < 0 || change_to > 3) {
+    if (change_to < 0 || change_to > 2) {
         print_color("red", "Number given is not valid, ID now set to 0.");
         return 0;
     }
@@ -61,21 +66,17 @@ int change_conv() {
 }
 
 /**
- * Function that drops a given conversation and frees the memory object.
+ * Function that drops the last conversation from program message controller.
  *
  * @param msg_controller Main structure to control all messages in program.
  *  
+ * @return ID of origin to avoid mistakes.
+ * 
  */
-void drop_conversation(message_board *msg_controller) {
-    int to_drop;
-    printf("\n\tWhat conversation do you want to drop: ");
-    scanf(" %d", &to_drop);
-    // strcpy(msg_controller->conv_names, "delete");
+int drop_conversation(message_board *msg_controller) {
+    pass_to_controller(msg_controller, "trash", &msg_controller->open_convs);
     red();
-    printf("\n\tConversation with ID %d was dropped.\n", to_drop);
+    printf("\n\tLast conversation from list dropped.\n");
     default_color();
-}
-
-void delete_from_controller(message_board *msg_controller, char* name, int position) {
-
+    return 0;
 }

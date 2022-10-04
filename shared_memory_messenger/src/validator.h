@@ -36,12 +36,14 @@ void pass_to_controller(message_board *msg_controller, char* name, int *position
  *
  */
 
-void drop_conversation(message_board *msg_controller);
+int drop_conversation(message_board *msg_controller);
 /**
  * Function that drops a given conversation and frees the memory object.
  *
  * @param msg_controller Main structure to control all messages in program.
  *  
+ * @return ID of origin to avoid mistakes.
+ * 
  */
  
 #endif
