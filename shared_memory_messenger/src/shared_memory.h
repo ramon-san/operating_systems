@@ -1,6 +1,6 @@
 // Define header file if not defined.
-#ifndef shmem_messenger_h
-#define shmem_messenger_h
+#ifndef shared_memory_h
+#define shared_memory_h
 
 // Import libraries to be used.
 #include <stdio.h>

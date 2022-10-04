@@ -1,4 +1,4 @@
-#include "shmem_messenger.h"
+#include "shared_memory.h"
 
 /**
  * Function that creates a shared memory object.

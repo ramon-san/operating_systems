@@ -30,6 +30,12 @@ void green();
  *
  */
 
+void red();
+/**
+ * Function to change text to red.
+ *
+ */
+
 void default_color();
 /**
  * Function to change text to default color.

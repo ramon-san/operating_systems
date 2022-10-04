@@ -20,13 +20,29 @@ void validate_new_conv(message_board *msg_controller) {
         return;
     }
     system("clear");
-    strcpy(msg_controller->conv_names[msg_controller->open_convs], temp_name);
-    strcpy(msg_controller->storage_ids[msg_controller->open_convs], "/");
-    strcat(msg_controller->storage_ids[msg_controller->open_convs], temp_name);
-    msg_controller->open_convs++;
-    msg_controller->total_convs++;
+    pass_to_controller(msg_controller, temp_name);
+    // strcpy(msg_controller->conv_names[msg_controller->open_convs], temp_name);
+    // strcpy(msg_controller->storage_ids[msg_controller->open_convs], "/");
+    // strcat(msg_controller->storage_ids[msg_controller->open_convs], temp_name);
+    // msg_controller->open_convs++;
+    // msg_controller->total_convs++;
 
     green(); printf("\n\tOpening chat with: %s\n\n", temp_name); default_color();
+}
+
+/**
+ * Function that passes data into the message_board object.
+ * 
+ * @param msg_controller Main structure to control all messages in program.
+ * @param name Name of new person to add in structure.
+ * 
+ */
+void pass_to_controller(message_board *msg_controller, char* name) {
+    strcpy(msg_controller->conv_names[msg_controller->open_convs], name);
+    strcpy(msg_controller->storage_ids[msg_controller->open_convs], "/");
+    strcat(msg_controller->storage_ids[msg_controller->open_convs], name);
+    msg_controller->open_convs++;
+    msg_controller->total_convs++;
 }
 
 /**
@@ -44,4 +60,20 @@ int change_conv() {
         return 0;
     }
     return change_to;
+}
+
+/**
+ * Function that drops a given conversation and frees the memory object.
+ *
+ * @param msg_controller Main structure to control all messages in program.
+ *  
+ */
+void drop_conversation(message_board *msg_controller) {
+    int to_drop;
+    printf("\n\tWhat conversation do you want to drop: ");
+    scanf(" %d", &to_drop);
+    // strcpy(msg_controller->conv_names, "delete");
+    red();
+    printf("\n\tConversation with ID %d was dropped.\n", to_drop);
+    default_color();
 }

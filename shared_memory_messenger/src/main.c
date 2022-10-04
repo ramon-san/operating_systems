@@ -30,10 +30,15 @@ int main(int argc, char *argv[]) {
                 case 'S':
                     validate_new_conv(&msg_controller);
                     break;
+                case 'D':
+                    print_convs(msg_controller);
+                    drop_conversation(&msg_controller);
+                    break;
                 case 'P':
                     print_convs(msg_controller);
                     break;
                 case 'G':
+                    system("clear");
                     print_id_data(msg_controller, current_conv);
                     break;
                 case 'C':
@@ -41,10 +46,15 @@ int main(int argc, char *argv[]) {
                     current_conv = change_conv();
                     print_id_data(msg_controller, current_conv);
                     break;
-                case 'M':
-                    printf("\n\tMissing [M] implementation.\n\n");
+                case 'T':
+                    printf("\n\tMissing [T]ext implementation.\n\n");
+                    break;
+                case 'R':
+                    printf("\n\tMissing [R]ead implementation.\n\n");
+                    break;
                 default:
                     print_color("red", "Please enter a valid option.");
+                    break;
             }
         }
     }

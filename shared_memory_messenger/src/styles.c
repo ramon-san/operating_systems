@@ -10,10 +10,12 @@ char print_menu() {
     char input;
     printf("\nWhat do you want to do:\n\n\
     [S]tart conversation\n\
+    [D]rop conversation\n\
     [C]hange conversations\n\
     [P]rint conversations\n\
     [G]et current conversation\n\
-    [M]essage to current conversation\n\
+    [T]ext current conversation\n\
+    [R]ead current conversation\n\
     [E]xit\n\n\tInput: ");
     scanf(" %c", &input);
     return toupper(input); // Save input as upper case value.
@@ -43,6 +45,12 @@ void print_color(char *color, char *to_print) {
  *
  */
 void green() { printf("\033[0;32m"); }
+
+/**
+ * Function to change text to red.
+ *
+ */
+void red() { printf("\033[1;31m"); }
 
 /**
  * Function to change text to default color.
