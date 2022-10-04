@@ -37,7 +37,7 @@ void print_convs(message_board board) {
  * @param current_conv Value of the conversation we're trying to print.
  *
  */
-void print_id_data(message_board board, uint8_t current_conv) {
+void print_id_data(message_board board, int current_conv) {
     if (current_conv >= 0 && current_conv <= 3) {
         green();
         printf("\n\tCurrent conversation with: %s", board.conv_names[current_conv]); 

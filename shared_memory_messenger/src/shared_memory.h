@@ -9,9 +9,13 @@
 #include <unistd.h>
 #include <string.h>
 
-// 
-#define STORAGE_ID "/OBJ_MEM_COM"
-#define STORAGE_SIZE 128
-#define DATA "Soy PID %d, Hola Curso de Sistemas Operativos"
+// Import proprietary libraries.
+#include "styles.h"
+
+int getSharedMemory(char *memory_name, int buffer_size);
+
+void type_in_shared_memory(char *memory_name, int buffer_size, int fd);
+
+void close_shared_memory(char *memory_name);
 
 #endif

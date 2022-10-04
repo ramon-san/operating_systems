@@ -3,7 +3,7 @@
 .PHONY = all clean PRINT
 
 CC = gcc
-LINKERS = -lm
+# LINKERS = -lm
 # FLAGS = -C0
 
 deps = $(wildcard *.c)

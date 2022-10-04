@@ -6,8 +6,9 @@
  * @param msg_controller    Main structure to control all messages in program.
  *
  */
-void validate_new_conv(message_board *msg_controller) {
+void validate_new_conv(message_board *msg_controller, int buffer_size) {
     char temp_name[12]; // Temporary name to create new conversation.
+    int fd, position;
 
     if (msg_controller->open_convs >= 3) {
         print_color("red", "Maximum number of conversation reached.");
@@ -21,6 +22,9 @@ void validate_new_conv(message_board *msg_controller) {
     }
     system("clear");
     pass_to_controller(msg_controller, temp_name, NULL);
+    position = msg_controller->open_convs-1;
+    fd = getSharedMemory(msg_controller->storage_ids[position], buffer_size);
+    msg_controller->file_descriptors[position] = fd;
 
     green(); printf("\n\tOpening chat with: %s\n\n", temp_name); default_color();
 }
@@ -74,6 +78,7 @@ int change_conv() {
  * 
  */
 int drop_conversation(message_board *msg_controller) {
+    close_shared_memory(msg_controller->storage_ids[msg_controller->open_convs]);
     pass_to_controller(msg_controller, "trash", &msg_controller->open_convs);
     red();
     printf("\n\tLast conversation from list dropped.\n");

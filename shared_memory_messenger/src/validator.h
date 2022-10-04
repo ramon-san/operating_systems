@@ -6,10 +6,11 @@
 #include <string.h>
 
 // Personal libraries.
+#include "shared_memory.h"
 #include "structures.h"
 #include "styles.h"
 
-void validate_new_conv(message_board *msg_controller);
+void validate_new_conv(message_board *msg_controller, int buffer_size);
 /**
  * Function to validate a new conversation can be created.
  *

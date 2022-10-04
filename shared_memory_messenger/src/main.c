@@ -1,11 +1,12 @@
 #include "structures.h"
 #include "styles.h"
 #include "validator.h"
+#include "shared_memory.h"
 
 int main(int argc, char *argv[]) {
     int buffer_size = atoi(argv[1]);
     char input;
-    uint8_t location = 0; // Menu page is 0 and messenger is 1.
+    int location = 0; // Menu page is 0 and messenger is 1.
     int current_conv = 0;
     message_board msg_controller; // Init message_board object (struct).
     msg_controller.total_convs = 0;
@@ -28,7 +29,7 @@ int main(int argc, char *argv[]) {
                     green(); printf("\n\tBye!\n\n"); default_color();
                     return 0;
                 case 'S':
-                    validate_new_conv(&msg_controller);
+                    validate_new_conv(&msg_controller, buffer_size);
                     break;
                 case 'D':
                     print_convs(msg_controller);
@@ -47,7 +48,7 @@ int main(int argc, char *argv[]) {
                     print_id_data(msg_controller, current_conv);
                     break;
                 case 'T':
-                    printf("\n\tMissing [T]ext implementation.\n\n");
+                    type_in_shared_memory(msg_controller.storage_ids[current_conv], buffer_size, msg_controller.file_descriptors[current_conv]);
                     break;
                 case 'R':
                     printf("\n\tMissing [R]ead implementation.\n\n");
