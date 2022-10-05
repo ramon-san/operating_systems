@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
                     validate_new_conv(&msg_controller, buffer_size);
                     break;
                 case 'D':
-                    print_convs(msg_controller);
+                    // print_convs(msg_controller);
                     current_conv = drop_conversation(&msg_controller);
                     break;
                 case 'P':

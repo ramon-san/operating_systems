@@ -8,7 +8,7 @@ It's recommended to run the code on its dedicated development environment, to do
 
 ``` Shell
 docker image build --tag shm_example:0.0 .
-docker container run -it --rm shm_example
+docker container run -it --rm shm_example:0.0 
 ```
 
 To run compile the code you just need to run:

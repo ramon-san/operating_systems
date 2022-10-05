@@ -78,7 +78,8 @@ int change_conv() {
  * 
  */
 int drop_conversation(message_board *msg_controller) {
-    close_shared_memory(msg_controller->storage_ids[msg_controller->open_convs]);
+    char *shm_directory = msg_controller->storage_ids[msg_controller->open_convs-1];
+    close_shared_memory(shm_directory);
     pass_to_controller(msg_controller, "trash", &msg_controller->open_convs);
     red();
     printf("\n\tLast conversation from list dropped.\n");
