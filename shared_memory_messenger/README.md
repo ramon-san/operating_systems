@@ -4,12 +4,18 @@ A quick implementation of a messenger applied through shared memory objects.
 
 ## Using the code
 
-It's recommended to run the code on its dedicated development environment, to do so run the following commands inside the `src/` directory and start your container:
+It's recommended to run the code on its dedicated development environment, to do so run the following commands inside the `shared_memory_messenger/` directory and start your container:
 
 ``` Shell
 docker image build --tag shm_example:0.0 .
 docker container run -it --rm shm_example:0.0 
 ```
+
+### Short way to run program
+
+Simply run `./run.sh` on the `shared_memory_messenger/` directory.
+
+### Long way to run program
 
 To run compile the code you just need to run:
 
