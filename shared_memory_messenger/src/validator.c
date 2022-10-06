@@ -79,6 +79,7 @@ int change_conv() {
  */
 int drop_conversation(message_board *msg_controller) {
     char *shm_directory = msg_controller->storage_ids[msg_controller->open_convs-1];
+    red(); printf("\n\tDeleting: %s\n", shm_directory); default_color();
     close_shared_memory(shm_directory);
     pass_to_controller(msg_controller, "trash", &msg_controller->open_convs);
     red();

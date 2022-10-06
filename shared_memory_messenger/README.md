@@ -11,6 +11,12 @@ docker image build --tag shm_example:0.0 .
 docker container run -it --rm shm_example:0.0 
 ```
 
+To run the previous command remember to run your Docker daemon, when you no longer want the image remove it with:
+
+``` Shell
+docker rmi shm_example:0.0
+```
+
 ### Short way to run program
 
 Simply run `./run.sh` on the `shared_memory_messenger/` directory.
