@@ -10,8 +10,10 @@ void print_message_board_history(message_board board) {
     green();
     system("clear");
     printf("\n\tYour message board had:\n\n\t\
-    - Total conversations: %i\n\t\
-    - Open conversations: %i\n", board.total_convs, board.open_convs);
+    - Total conversations:  %i\n\t\
+    - Open conversations:   %i\n\t\
+    - Total memory writes:  %i\n\t\
+    - Total memory reads:   %i\n", board.total_convs, board.open_convs, board.total_mem_writes, board.total_mem_reads);
     default_color();
 }
 

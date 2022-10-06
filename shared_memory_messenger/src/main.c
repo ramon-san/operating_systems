@@ -11,6 +11,8 @@ int main(int argc, char *argv[]) {
     message_board msg_controller; // Init message_board object (struct).
     msg_controller.total_convs = 0;
     msg_controller.open_convs = 0;
+    msg_controller.total_mem_writes = 0;
+    msg_controller.total_mem_reads = 0;
     system("clear");
 
     if (buffer_size > 256) {
@@ -51,10 +53,13 @@ int main(int argc, char *argv[]) {
                     break;
                 case 'T':
                     system("clear");
-                    type_in_shared_memory(msg_controller.storage_ids[current_conv], buffer_size, msg_controller.file_descriptors[current_conv]);
+                    type_in_shared_memory(msg_controller.conv_names[current_conv], buffer_size, msg_controller.file_descriptors[current_conv]);
+                    msg_controller.total_mem_writes++;
                     break;
                 case 'R':
-                    printf("\n\tMissing [R]ead implementation.\n\n");
+                    system("clear");
+                    read_from_shared_memory(msg_controller.conv_names[current_conv], buffer_size, msg_controller.file_descriptors[current_conv]);
+                    msg_controller.total_mem_reads++;
                     break;
                 default:
                     print_color("red", "Please enter a valid option.");
