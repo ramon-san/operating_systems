@@ -1,4 +1,4 @@
 #!/bin/sh
 
 make -C src/
-./src/messenger.exe 32
+./src/messenger.exe 64

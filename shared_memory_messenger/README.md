@@ -2,28 +2,40 @@
 
 A quick implementation of a messenger applied through shared memory objects.
 
-## Using the code
+## Building your environment
 
-It's recommended to run the code on its dedicated development environment, to do so run the following commands inside the `shared_memory_messenger/` directory and start your container:
+### Short way
 
-``` Shell
-docker image build --tag shm_example:0.0 .
-docker container run -it --rm shm_example:0.0 
-```
-
-To run the previous command remember to run your Docker daemon, when you no longer want the image remove it with:
+It's recommended to run the code on its dedicated development environment, to build this environment start your Docker daemon (just start Docker) and run this script on the `shared_memory_messenger/` directory:
 
 ``` Shell
-docker rmi shm_example:0.0
+./build.sh
 ```
 
-### Short way to run program
+### Long way
+
+You could also run the following commands inside the `shared_memory_messenger/` directory and start your container manually, this is exactly what the `build.sh` script does:
+
+``` Shell
+docker image build --tag shm_example .
+docker container run -it --rm shm_example
+```
+
+When you no longer want the image remove it with:
+
+``` Shell
+docker rmi shm_example
+```
+
+## Run the code
+
+### Short way
 
 Simply run `./run.sh` on the `shared_memory_messenger/` directory.
 
-### Long way to run program
+### Long way
 
-To run compile the code you just need to run:
+To compile the code you just need to run the following command inside the `shared_memory_messenger/src/` directory:
 
 ``` Shell
 make
@@ -35,7 +47,7 @@ Once you have the executable version run it with:
 ./messenger.exe ${BUFFER_SIZE}
 ```
 
-Here the `${BUFFER_SIZE}` parameter represents the maximum size any given message can have. The src files are spread all over the place to follow a modular architecture and follow what I—up till now—consider best practices.
+Here the `${BUFFER_SIZE}` parameter represents the maximum size any given message can have. The src files are spread all over the place to follow a modular architecture and follow what I currently consider best practices. When running the code from `run.sh` buffer size is set to 64 Bytes by default.
 
 ## Teacher instructions
 

@@ -11,6 +11,13 @@
 #include "styles.h"
 
 void create_bot(message_board *msg_controller, int buffer_size);
+/**
+ * Function that creates a default "bot" conversation.
+ *
+ * @param msg_controller    Main structure to control all messages in program.
+ * @param buffer_size       Buffer size to assign memory.
+ * 
+ */
 
 void validate_new_conv(message_board *msg_controller, int buffer_size);
 /**

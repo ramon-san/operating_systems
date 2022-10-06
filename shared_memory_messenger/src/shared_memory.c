@@ -9,7 +9,6 @@
  */
 int getSharedMemory(char *memory_name, int buffer_size) {
 	int res, len, fd; // fd = file descriptor.
-	void *addr;
 	char data[buffer_size];
 
 	// Get shared memory object (this is not a file).
@@ -34,11 +33,10 @@ void type_in_shared_memory(char *memory_name, int buffer_size, int fd) {
 	int len, res;
 	char message[buffer_size];
 
-	fflush(stdin); // Try to fix fgets() ignore problem.
-	printf("Message: \n");
-	fgets(message, buffer_size, stdin);
+	fflush(stdin); // Try to fix scanf() ignore problem.
+	printf("Message: ");
+	scanf(" %[^\n]", message);
 
-	printf("received message %s", message);
 	// // Map process memory.
 	// addr = mmap(NULL, buffer_size, PROT_WRITE, MAP_SHARED, fd, 0);
 	// if (addr == MAP_FAILED) {
@@ -59,14 +57,6 @@ void type_in_shared_memory(char *memory_name, int buffer_size, int fd) {
 }
 
 void close_shared_memory(char *memory_name) {
-	// res = munmap(addr, STORAGE_SIZE);
-	// if (res == -1)
-	// {
-	// 	perror("munmap");
-	// 	return 40;
-	// }
-
-	printf("Attempting to close %s", memory_name);
 	int fd = shm_unlink(memory_name);
 	if (fd == -1) {
 		perror("\n\tError in shm_unlink()");

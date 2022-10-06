@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
                     validate_new_conv(&msg_controller, buffer_size);
                     break;
                 case 'D':
-                    // print_convs(msg_controller);
+                    system("clear");
                     current_conv = drop_conversation(&msg_controller);
                     break;
                 case 'P':
@@ -50,6 +50,7 @@ int main(int argc, char *argv[]) {
                     print_id_data(msg_controller, current_conv);
                     break;
                 case 'T':
+                    system("clear");
                     type_in_shared_memory(msg_controller.storage_ids[current_conv], buffer_size, msg_controller.file_descriptors[current_conv]);
                     break;
                 case 'R':
