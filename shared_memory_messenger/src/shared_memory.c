@@ -13,12 +13,12 @@ int getSharedMemory(char *memory_name, int buffer_size) {
 	char data[buffer_size];
 
 	// Get shared memory object (this is not a file).
-	fd = shm_open("/probando", O_CREAT|O_RDWR, S_IRUSR|S_IWUSR);
+	fd = shm_open(memory_name, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR);
 	if (fd == -1) {
 		perror("\n\tError in shm_open()");
 		exit(10);
 	}
-	printf("File descriptor: %d and buffer: %d", fd, buffer_size);
+	//printf("\n\tFile descriptor: %d and buffer: %d\n", fd, buffer_size);
 	// Increase shared memory object, its cero by default.
 	res = ftruncate(fd, buffer_size);
 	if (res == -1) {
@@ -30,17 +30,20 @@ int getSharedMemory(char *memory_name, int buffer_size) {
 }
 
 void type_in_shared_memory(char *memory_name, int buffer_size, int fd) {
-	int addr, len, res;
-	char *message;
+	void *addr;
+	int len, res;
+	char message[buffer_size];
 
-	scanf(" %s", message);
+	fflush(stdin); // Try to fix fgets() ignore problem.
+	printf("Message: \n");
+	fgets(message, buffer_size, stdin);
 
 	printf("received message %s", message);
 	// // Map process memory.
 	// addr = mmap(NULL, buffer_size, PROT_WRITE, MAP_SHARED, fd, 0);
 	// if (addr == MAP_FAILED) {
-	// 	perror("mmap");
-	// 	return 30;
+	// 	perror("\n\tError in mmap()");
+	// 	exit(30);
 	// }
 
 	// // Add data to shared memory.
@@ -50,12 +53,19 @@ void type_in_shared_memory(char *memory_name, int buffer_size, int fd) {
 	// // End mmap() function.
 	// res = munmap(addr, buffer_size);
 	// if (res == -1) {
-	// 	print_color("red", "Error using function munmap().");
-	// 	return 40;
+	// 	perror("\n\tError in munmap()");
+	// 	exit(40);
 	// }
 }
 
 void close_shared_memory(char *memory_name) {
+	// res = munmap(addr, STORAGE_SIZE);
+	// if (res == -1)
+	// {
+	// 	perror("munmap");
+	// 	return 40;
+	// }
+
 	printf("Attempting to close %s", memory_name);
 	int fd = shm_unlink(memory_name);
 	if (fd == -1) {

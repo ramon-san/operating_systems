@@ -18,6 +18,8 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
+    create_bot(&msg_controller, buffer_size);
+
     while (1) {
         if (location == 0) {
             input = print_menu();

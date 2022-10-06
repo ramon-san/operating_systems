@@ -1,6 +1,22 @@
 #include "validator.h"
 
 /**
+ * Function that creates a default "bot" conversation.
+ *
+ * @param msg_controller    Main structure to control all messages in program.
+ * @param buffer_size       Buffer size to assign memory.
+ * 
+ */
+void create_bot(message_board *msg_controller, int buffer_size) {
+    int fd;
+
+    pass_to_controller(msg_controller, "system_bot", NULL);
+    fd = getSharedMemory(msg_controller->storage_ids[0], buffer_size);
+    msg_controller->file_descriptors[0] = fd;
+
+    print_color("green", "Chat with system_bot open");
+}
+/**
  * Function to validate a new conversation can be created.
  *
  * @param msg_controller    Main structure to control all messages in program.
@@ -11,7 +27,7 @@ void validate_new_conv(message_board *msg_controller, int buffer_size) {
     int fd, position;
 
     if (msg_controller->open_convs >= 3) {
-        print_color("red", "Maximum number of conversation reached.");
+        print_color("green", "Maximum number of conversation reached.");
         return;
     }
     printf("\n\tContact name: ");
@@ -78,12 +94,16 @@ int change_conv() {
  * 
  */
 int drop_conversation(message_board *msg_controller) {
-    char *shm_directory = msg_controller->storage_ids[msg_controller->open_convs-1];
-    red(); printf("\n\tDeleting: %s\n", shm_directory); default_color();
-    close_shared_memory(shm_directory);
-    pass_to_controller(msg_controller, "trash", &msg_controller->open_convs);
-    red();
-    printf("\n\tLast conversation from list dropped.\n");
-    default_color();
+    if (msg_controller->open_convs == 1) {
+        print_color("red", "Can't delete system_bot.");
+    } else {
+        char *shm_directory = msg_controller->storage_ids[msg_controller->open_convs-1];
+        red(); printf("\n\tDeleting: %s\n", shm_directory); default_color();
+        close_shared_memory(shm_directory);
+        pass_to_controller(msg_controller, "trash", &msg_controller->open_convs);
+        red();
+        printf("\n\tLast conversation from list dropped.\n");
+        default_color();
+    }
     return 0;
 }

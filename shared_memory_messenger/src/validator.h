@@ -10,6 +10,8 @@
 #include "structures.h"
 #include "styles.h"
 
+void create_bot(message_board *msg_controller, int buffer_size);
+
 void validate_new_conv(message_board *msg_controller, int buffer_size);
 /**
  * Function to validate a new conversation can be created.
