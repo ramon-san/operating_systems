@@ -35,10 +35,4 @@ Here the `${FILE}` parameter represents the file you want to open. The src files
 
 ## Teacher instructions
 
-A small message service should be done using shared memory using shared memory objects.
-
-- The name of the object is the conversation.
-- The program should ask whether to read or write a message (or you can have a program for each thing).
-- You must keep track of the messages read (which free memory) and
-messages left (consuming memory).
-- To access shared memory, semaphores must be used.
+Create an hexadecimal editor with capacity to...

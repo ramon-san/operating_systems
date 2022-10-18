@@ -1,17 +1,18 @@
 #include "interface.h"
 
 int main(int argc, char const *argv[]) {
-	initscr();			
+	initscr(); // Make standard screen (stdscr) for ncurses.
+    cbreak();
 
-    /* El archivo se da como parametro */
+    /* File is given as a parameter. */
     if (argc != 2) {
-        printf("Se usa %s <archivo> \n", argv[0]);
+        printf("Using %s <file> \n", argv[0]);
         return(-1);
     }
 
     edit((char *)argv[1]);
 
-    endwin();
+    endwin(); // Frees memory from screen and closes ncurses.
     
     return 0;
 }
