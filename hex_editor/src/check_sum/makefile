@@ -3,19 +3,19 @@
 .PHONY = all clean PRINT
 
 CC = gcc
-LINKERS = -lncurses
+# LINKERS = -lncurses
 # FLAGS = -C0
 
 deps = $(wildcard *.c)
 BINS = $(deps:%.c=%.o)
 
-all: ${BINS} hex_editor.exe
+all: ${BINS} check_sum.exe
 
 ${BINS}: ${deps}
 	@echo "\nGenerating binary objects."
 	${CC} -c $^
 
-hex_editor.exe: ${BINS}
+check_sum.exe: ${BINS}
 	@echo "\nGenerating executable."
 	${CC} $^ -o $@ ${LINKERS}
 	@echo "\n"
