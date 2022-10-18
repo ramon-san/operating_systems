@@ -15,6 +15,9 @@ This program allows you to simulate a messenger through the use of a shared memo
 
 > To understand how shared memory is managed in MacOS read through the manual entry for `shm_open`, there they state: "There is no visible entry in the file system for the created object in this implementation."
 
+### [Hex Editor](./hex_editor/)
+This program is an hexadecimal editor, you can use it to open any file.
+
 ## How to run this things?
 Instructions for running each program can be found in the README.md file of each project.
 
