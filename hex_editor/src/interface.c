@@ -1,31 +1,46 @@
 #include "interface.h"
 
 int edit(char *filename) {
-    int fd;
-
-    // Read file.
-    char *map = map_file(filename, &fd);
-    if (map == NULL) {
-        exit(EXIT_FAILURE);
-    }
+    int fd, u_in = 0, y_axis = 0, x_axis = 9;
     
-    for(int i=0; i<25; i++) {
-      	// Create line, base, and offset.
-    	char *l = make_line(map, i*16);
-	    mvprintw(i, 0, l); // values are y-axis, x-axis, and content.
-    }
-    refresh();
+    while(u_in != 27) {
+        // Read file.
+        char *map = map_file(filename, &fd);
+        if (map == NULL) {
+            exit(EXIT_FAILURE);
+        }
+        // Create lines for editor screen.
+        for(int i=0; i<25; i++) {
+            // Create line, base, and offset.
+            char *l = make_line(map, i*16);
+            mvprintw(i, 0, l); // values are y-axis, x-axis, and content.
+        }
+        move(y_axis, x_axis);
+        refresh();
 
-    read_char();
-
-    if (munmap(map, fd) == -1) {
-        perror("Error while unmapping");
+        //read_char(&u_in);
+        u_in = getchar();
+        move_controller(u_in, &y_axis, &x_axis);
+        // refresh();
+        
+        if (munmap(map, fd) == -1) {
+            perror("Error while unmapping");
+        }
+        
+        close(fd);
     }
-    close(fd);
     
     return 0;
 }
 
+/**
+* Function to open file and map its memory.
+*
+* @param file_path Path for file we're trying to open.
+* @param fd        File descriptor memory address for file to open.
+*
+* @return Memory map for file to edit.
+*/
 char *map_file(char *filePath, int *fd) {
     // Open file.
     *fd = open(filePath, O_RDONLY);
@@ -49,42 +64,58 @@ char *map_file(char *filePath, int *fd) {
     return map;
 }
 
+/**
+* Function to create a line to print in our editor.
+*
+* @param base Memory map for file to edit.
+* @param dir  File position as a multiple of 16.
+*
+* @return     Pointer to string containing created line.
+*/
 char *make_line(char *base, int dir) {
-	  char linea[100]; // The line is smaller
+	  char line[100];
 	  int offset = 0;
-	  // Show 16 chars per line
-	  offset += sprintf(linea, "%08x ", dir); // Offset in hexadecimal
+	  // Print hexadecimal offset from file.
+	  offset += sprintf(line, "%08x ", dir);
+      // Loop to display values in hex.
 	  for(int i=0; i < 4; i++) {
 	  	unsigned char a,b,c,d;
 		a = base[dir+4*i+0];
   		b = base[dir+4*i+1];
 	  	c = base[dir+4*i+2];
 		d = base[dir+4*i+3];
-		offset += sprintf(&linea[offset],"%02x %02x %02x %02x ", a, b, c, d);
+		offset += sprintf(&line[offset],"%02x %02x %02x %02x ", a, b, c, d);
 	  }
-      // Loop how many hex numbers to display.
+      // Loop to display ascii representable format.
 	  for(int i=0; i < 16; i++) {
           // Check if character is printable.
 		  if (isprint(base[dir+i])) {
-			  offset += sprintf(&linea[offset], "%c", base[dir+i]);
+			  offset += sprintf(&line[offset], "%c", base[dir+i]);
 		  }
 		  else {
-			  offset += sprintf(&linea[offset],".");
+			  offset += sprintf(&line[offset],".");
 		  }
 	  }
-	  sprintf(&linea[offset],"\n");
+	  sprintf(&line[offset],"\n");
 
-  	return(strdup(linea));
+  	return(strdup(line));
 }
 
-int read_char() {
+/**
+* Function to read user input and parse result to binary.
+*
+* @param u_in Main user input variable memory address.
+*
+* @return Number for user input .
+*/
+int read_char(int *u_in) {
     int chars[5];
-    int ch,i=0;
+    int i=0;
     nodelay(stdscr, TRUE);
-    while((ch = getch()) == ERR); // Active wait.
-    ungetch(ch);
-    while((ch = getch()) != ERR) {
-        chars[i++]=ch;
+    while((*u_in = getch()) == ERR); // Active wait.
+    ungetch(*u_in);
+    while((*u_in = getch()) != ERR) {
+        chars[i++]=*u_in;
     }
     // Converts to number with everything read.
     int res=0;
@@ -94,4 +125,35 @@ int read_char() {
     }
 
     return res;
+}
+
+/**
+* Function to move inside of the ncurses screen.
+*
+* @param u_in   User input to use.
+* @param y_axis Curser current position in the y-axis.
+* @param x_axis Curser current position in the x-axis.
+*
+*/
+void move_controller(int u_in, int *y_axis, int *x_axis) {
+    switch(u_in) {
+        case(KEY_UP):
+            *y_axis -= 1;
+            break;
+        case(KEY_RIGHT):
+            *x_axis += 1;
+            break;
+        case(KEY_DOWN):
+            *y_axis += 1;
+            break;
+        case(KEY_LEFT):
+            *x_axis -= 1;
+            break;
+        default:
+            if ((u_in >= 48 && u_in <= 57) || (u_in >= 65 && u_in <= 70) || (u_in >= 97 && u_in <= 102)) {
+                // printw("%c", u_in);
+                *x_axis += 1;
+            }
+            break;
+	}
 }
