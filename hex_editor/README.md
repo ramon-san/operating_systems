@@ -31,7 +31,7 @@ Once you have the executable version run it with:
 ./messenger.exe ${FILE}
 ```
 
-Here the `${FILE}` parameter represents the file you want to open. The src files are spread all over the place to follow a modular architecture and follow what I currently consider best practices. When running the code from `run.sh` a file called `hex_editor/test_file.dsk` gets opened in the editor by default.
+Here the `${FILE}` parameter represents the file you want to open. The src files are spread all over the place to follow a modular architecture and follow what I currently consider best practices. When running the code from `run.sh` a file called `hex_editor/example` gets opened in the editor by default.
 
 ## Teacher instructions
 

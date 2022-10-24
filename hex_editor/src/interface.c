@@ -1,34 +1,29 @@
 #include "interface.h"
 
 int edit(char *filename) {
-    int fd, u_in = 0, y_axis = 0, x_axis = 9;
+    int fd, u_in = 0, y_axis = 0, x_axis = 9, offset = 0;
     
-    while(u_in != 27) {
         // Read file.
         char *map = map_file(filename, &fd);
         if (map == NULL) {
             exit(EXIT_FAILURE);
         }
-        // Create lines for editor screen.
-        for(int i=0; i<25; i++) {
-            // Create line, base, and offset.
-            char *l = make_line(map, i*16);
-            mvprintw(i, 0, l); // values are y-axis, x-axis, and content.
-        }
+
+    while(u_in != 113) {
+        print_screen(map, offset);
         move(y_axis, x_axis);
         refresh();
 
         //read_char(&u_in);
         u_in = getchar();
-        move_controller(u_in, &y_axis, &x_axis);
+        move_controller(u_in, &y_axis, &x_axis, &offset);
         // refresh();
-        
-        if (munmap(map, fd) == -1) {
-            perror("Error while unmapping");
-        }
-        
-        close(fd);
     }
+
+    if (munmap(map, fd) == -1) {
+        perror("Error while unmapping");
+    }
+    close(fd);
     
     return 0;
 }
@@ -62,6 +57,22 @@ char *map_file(char *filePath, int *fd) {
     }
 
     return map;
+}
+
+/**
+* Function to print editor screen.
+*
+* @param map    Memory address of file we're editing.
+* @param offset Position where we should start printing.
+*
+*/
+void print_screen(char *map, int offset) {
+    // Create lines for editor screen.
+    for(int i=0; i<25; i++) {
+        // Create line, base, and offset.
+        char *l = make_line(map, offset*16+i*16);
+        mvprintw(i, 0, l); // values are y-axis, x-axis, and content.
+    }
 }
 
 /**
@@ -115,7 +126,7 @@ int read_char(int *u_in) {
     while((*u_in = getch()) == ERR); // Active wait.
     ungetch(*u_in);
     while((*u_in = getch()) != ERR) {
-        chars[i++]=*u_in;
+        chars[i++] = *u_in;
     }
     // Converts to number with everything read.
     int res=0;
@@ -133,21 +144,40 @@ int read_char(int *u_in) {
 * @param u_in   User input to use.
 * @param y_axis Curser current position in the y-axis.
 * @param x_axis Curser current position in the x-axis.
+* @param offset Value for the offset that indicates file line position.
 *
 */
-void move_controller(int u_in, int *y_axis, int *x_axis) {
+void move_controller(int u_in, int *y_axis, int *x_axis, int *offset) {
     switch(u_in) {
-        case(KEY_UP):
-            *y_axis -= 1;
+        case(65):
+            if (*y_axis > 0) {
+                *y_axis -= 1;
+            } else *offset -= 1;
             break;
-        case(KEY_RIGHT):
-            *x_axis += 1;
+        case(67):
+            if (*x_axis < 72) {
+                *x_axis += 1;
+                for (int i=1; i <= 16; i++) {
+                    if (*x_axis == 8+i*3) {
+                        *x_axis += 1;
+                    }
+                }
+            } else *x_axis = 9;
             break;
-        case(KEY_DOWN):
-            *y_axis += 1;
+        case(66):
+            if (*y_axis < 24) {
+                *y_axis += 1;
+            } else *offset += 1;
             break;
-        case(KEY_LEFT):
-            *x_axis -= 1;
+        case(68):
+            if (*x_axis > 9) {
+                *x_axis -= 1;
+                for (int i=1; i <= 16; i++) {
+                    if (*x_axis == 8+i*3) {
+                        *x_axis -= 1;
+                    }
+                }
+            } else *x_axis = 72; // This is the final column of our editor.
             break;
         default:
             if ((u_in >= 48 && u_in <= 57) || (u_in >= 65 && u_in <= 70) || (u_in >= 97 && u_in <= 102)) {

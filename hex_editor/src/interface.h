@@ -25,6 +25,15 @@ char *map_file(char *filePath, int *fd);
 * @return Memory map for file to edit.
 */
 
+void print_screen(char *map, int offset);
+/**
+* Function to print editor screen.
+*
+* @param map    Memory address of file we're editing.
+* @param offset Position where we should start printing.
+*
+*/
+
 char *make_line(char *base, int dir);
 /**
 * Function to create a line to print in our editor.
@@ -44,13 +53,14 @@ int read_char(int *u_in);
 * @return Number for user input .
 */
 
-void move_controller(int u_in, int *y_axis, int *x_axis);
+void move_controller(int u_in, int *y_axis, int *x_axis, int *offset);
 /**
 * Function to move inside of the ncurses screen.
 *
 * @param u_in   User input to use.
 * @param y_axis Curser current position in the y-axis.
 * @param x_axis Curser current position in the x-axis.
+* @param offset Value for the offset that indicates file line position.
 *
 */
 
