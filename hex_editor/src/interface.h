@@ -53,7 +53,7 @@ int read_char(int *u_in);
 * @return Number for user input .
 */
 
-void move_controller(int u_in, int *y_axis, int *x_axis, int *offset);
+void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map);
 /**
 * Function to move inside of the ncurses screen.
 *

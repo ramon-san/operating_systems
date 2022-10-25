@@ -16,8 +16,7 @@ int edit(char *filename) {
 
         //read_char(&u_in);
         u_in = getchar();
-        move_controller(u_in, &y_axis, &x_axis, &offset);
-        // refresh();
+        move_controller(u_in, &y_axis, &x_axis, &offset, map);
     }
 
     if (munmap(map, fd) == -1) {
@@ -147,7 +146,7 @@ int read_char(int *u_in) {
 * @param offset Value for the offset that indicates file line position.
 *
 */
-void move_controller(int u_in, int *y_axis, int *x_axis, int *offset) {
+void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map) {
     switch(u_in) {
         case(65):
             if (*y_axis > 0) {
@@ -181,8 +180,15 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset) {
             break;
         default:
             if ((u_in >= 48 && u_in <= 57) || (u_in >= 65 && u_in <= 70) || (u_in >= 97 && u_in <= 102)) {
-                // printw("%c", u_in);
-                *x_axis += 1;
+                // map[*y_axis * 16 + *x_axis - 16] = u_in; // Check this line.
+                if (*x_axis < 72) {
+                    *x_axis += 1;
+                    for (int i=1; i <= 16; i++) {
+                        if (*x_axis == 8+i*3) {
+                            *x_axis += 1;
+                        }
+                    }
+                } else *x_axis = 9;
             }
             break;
 	}
