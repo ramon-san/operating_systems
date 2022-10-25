@@ -12,10 +12,11 @@
 #include <curses.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
+#include <math.h>
 
 int edit(char *filename);
 
-char *map_file(char *filePath, int *fd);
+char *map_file(char *filePath, int *fd, int *fs);
 /**
 * Function to open file and map its memory.
 *
@@ -25,35 +26,7 @@ char *map_file(char *filePath, int *fd);
 * @return Memory map for file to edit.
 */
 
-void print_screen(char *map, int offset);
-/**
-* Function to print editor screen.
-*
-* @param map    Memory address of file we're editing.
-* @param offset Position where we should start printing.
-*
-*/
-
-char *make_line(char *base, int dir);
-/**
-* Function to create a line to print in our editor.
-*
-* @param base Memory map for file to edit.
-* @param dir  File position as a multiple of 16.
-*
-* @return     Pointer to string containing created line.
-*/
-
-int read_char(int *u_in);
-/**
-* Function to read user input and parse result to binary.
-*
-* @param u_in Main user input variable memory address.
-*
-* @return Number for user input .
-*/
-
-void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map);
+void move_controller(int u_in, char u_in_ch, int *y_axis, int *x_axis, int *offset, char *map);
 /**
 * Function to move inside of the ncurses screen.
 *

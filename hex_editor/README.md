@@ -1,5 +1,7 @@
 # Hex editor
 
+> If the hex editor breaks your terminal, run: `stty sane`.
+
 El archivo checkSum.c hace una suma sobre el archivo que se da como argumento. Es una suma simple de los bytes en el archivo.
 Se compila con:
   gcc -o checkSum checkSum.c

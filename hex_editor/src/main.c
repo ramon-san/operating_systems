@@ -2,7 +2,9 @@
 
 int main(int argc, char const *argv[]) {
 	initscr(); // Make standard screen (stdscr) for ncurses.
-    cbreak();
+	cbreak();
+	keypad(stdscr, TRUE);
+	noecho();
 
     /* File is given as a parameter. */
     if (argc != 2) {
