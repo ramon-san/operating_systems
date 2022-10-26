@@ -135,12 +135,18 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map)
                     
                     if (*x_axis < 56) {
                         *x_axis += 1;
+                        if (*x_axis == 56) {
+                            *x_axis = 9;
+                            if (*y_axis < 24) {
+                                *y_axis += 1;
+                            } else *offset += 1;
+                        }
                         for (int i=1; i <= 16; i++) {
                             if (*x_axis == 8+i*3) {
                                 *x_axis += 1;
                             }
                         }
-                    } else *x_axis = 9;
+                    }
                 }
             }
             break;
