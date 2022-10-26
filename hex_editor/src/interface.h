@@ -25,7 +25,7 @@ char *map_file(char *filePath, int *fd, int *fs);
 * @return Memory map for file to edit.
 */
 
-void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map);
+void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map, long *temp);
 /**
 * Function to move inside of the ncurses screen.
 *
@@ -36,6 +36,6 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map)
 *
 */
 
-int leeChar();
+int check_x_position(int x_axis, int y_axis, long *binary_value);
 
 #endif
