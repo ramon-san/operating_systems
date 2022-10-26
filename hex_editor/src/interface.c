@@ -4,12 +4,11 @@
 int edit(char *filename) {
     int fd, fs, fr; // File controller variables (descriptor, size, and rows).
     int u_in = 0, y_axis = 0, x_axis = 9, offset = 0;
-    char u_in_ch;
-        // Read file.
-        char *map = map_file(filename, &fd, &fs);
-        if (map == NULL) {
-            exit(EXIT_FAILURE);
-        }
+    char status_text[35];
+
+    // Read file.
+    char *map = map_file(filename, &fd, &fs);
+    if (map == NULL) exit(EXIT_FAILURE);
 
     // Assign file rows we're using, one row every 16 bytes.
     fr = (int)ceil((float)fs/16);
@@ -20,15 +19,15 @@ int edit(char *filename) {
 
     while(u_in != 27) {
         print_screen(map, &offset, fr, &y_axis, &x_axis, filename);
+        sprintf(status_text, "Map address: %c -> %i", map[y_axis*16+(x_axis-57)], y_axis*16+(x_axis-57));
+	    mvprintw(30, 0, status_text);
         move(y_axis, x_axis);
         refresh();
 
-        //u_in_ch = read_char(&u_in);
-        u_in = getch();
-        u_in_ch = (char)u_in;
-        printw("%c", u_in_ch);
+        u_in = leeChar();
+        // u_in = getch();
 
-        move_controller(u_in, u_in_ch, &y_axis, &x_axis, &offset, map);
+        move_controller(u_in, &y_axis, &x_axis, &offset, map);
     }
 
     if (munmap(map, fd) == -1) {
@@ -50,7 +49,7 @@ int edit(char *filename) {
 */
 char *map_file(char *filePath, int *fd, int *fs) {
     // Open file.
-    *fd = open(filePath, O_RDONLY);
+    *fd = open(filePath, O_RDWR);
     if (*fd == -1) {
     	perror("Error opening file.");
 	    return(NULL);
@@ -61,7 +60,7 @@ char *map_file(char *filePath, int *fd, int *fs) {
     fstat(*fd, &st);
     *fs = st.st_size;
 
-    char *map = mmap(0, *fs, PROT_READ, MAP_SHARED, *fd, 0);
+    char *map = mmap(0, *fs, PROT_READ | PROT_WRITE, MAP_SHARED, *fd, 0);
     if (map == MAP_FAILED) {
     	close(*fd);
 	    perror("Error mapping file.");
@@ -80,7 +79,7 @@ char *map_file(char *filePath, int *fd, int *fs) {
 * @param offset Value for the offset that indicates file line position.
 *
 */
-void move_controller(int u_in, char u_in_ch, int *y_axis, int *x_axis, int *offset, char *map) {
+void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map) {
     switch(u_in) {
         case(KEY_UP):
             if (*y_axis > 0) {
@@ -114,8 +113,12 @@ void move_controller(int u_in, char u_in_ch, int *y_axis, int *x_axis, int *offs
             break;
         default:
             if (*x_axis >= 56 && *x_axis <= 72) {
-                if (u_in != 27 && u_in < 65 && u_in > 68) {
-                    map[*y_axis * 16 + *x_axis - 56] = u_in_ch;
+                if (u_in != 27) {
+                    map[*y_axis*16+(*x_axis-57)] = (char)u_in;
+                    // endwin();
+                    // printf("%i, with %c", *y_axis*16+(*x_axis-57), (char)u_in);
+                    // exit(1);
+                    // map[1] = u_in;
                 }
             } else {
                 if ((u_in >= 48 && u_in <= 57) || (u_in >= 65 && u_in <= 70) || (u_in >= 97 && u_in <= 102)) {
@@ -132,4 +135,22 @@ void move_controller(int u_in, char u_in_ch, int *y_axis, int *x_axis, int *offs
             }
             break;
 	}
+}
+
+int leeChar() {
+  int chars[5];
+  int ch,i=0;
+  nodelay(stdscr, TRUE);
+  while((ch = getch()) == ERR); /* Espera activa */
+  ungetch(ch);
+  while((ch = getch()) != ERR) {
+    chars[i++]=ch;
+  }
+  /* convierte a numero con todo lo leido */
+  int res=0;
+  for(int j=0;j<i;j++) {
+    res <<=8;
+    res |= chars[j];
+  }
+  return res;
 }

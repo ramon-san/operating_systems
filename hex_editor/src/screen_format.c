@@ -13,11 +13,8 @@ void print_screen(char *map, int *offset, int fr, int *y_axis, int *x_axis, char
 
 	// Check overflow logic to limit things for given file size.
     if (fr <= 25) {
-		if (*offset == -1) {
-			*y_axis = fr-1;
-		} else if (*offset == 1) {
-			*y_axis = 0;
-		}
+		if (*offset == -1) *y_axis = 24;
+		if (*offset == 1) *y_axis = 0;
 		*offset = 0;
 	} else {
 		if (*offset == -1) {
@@ -42,6 +39,8 @@ void print_screen(char *map, int *offset, int fr, int *y_axis, int *x_axis, char
     attron(A_STANDOUT | A_UNDERLINE);
     mvprintw(28, 6, filename);
     attroff(A_STANDOUT | A_UNDERLINE);
+	sprintf(status_text, "Map address: %p", map);
+	mvprintw(29, 0, status_text);
 }
 
 /**
