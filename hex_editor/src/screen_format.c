@@ -35,12 +35,12 @@ void print_screen(char *map, int *offset, int fr, int *y_axis, int *x_axis, char
     }
     sprintf(status_text, "Located in y = %i and x = %i (%i).", *y_axis, *x_axis, *offset);
     mvprintw(27, 0, status_text);
-    mvprintw(28, 0, "File: ");
-    attron(A_STANDOUT | A_UNDERLINE);
-    mvprintw(28, 6, filename);
-    attroff(A_STANDOUT | A_UNDERLINE);
 	sprintf(status_text, "Map address: %p", map);
 	mvprintw(29, 0, status_text);
+    attron(A_STANDOUT | A_UNDERLINE);
+    mvprintw(31, 0, filename);
+    attroff(A_STANDOUT | A_UNDERLINE);
+	mvprintw(33, 0, "Exit editor with [ESC].");
 }
 
 /**

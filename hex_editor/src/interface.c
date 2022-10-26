@@ -4,8 +4,7 @@
 int edit(char *filename) {
     int fd, fs, fr; // File controller variables (descriptor, size, and rows).
     int u_in = 0, y_axis = 0, x_axis = 9, offset = 0;
-    long temp = 0;
-    char status_text[35], temp_str[15];
+    char status_text[35], temp_str[20];
 
     // Read file.
     char *map = map_file(filename, &fd, &fs);
@@ -20,16 +19,12 @@ int edit(char *filename) {
 
     while(u_in != 27) {
         print_screen(map, &offset, fr, &y_axis, &x_axis, filename);
-        sprintf(status_text, "Map address: %c -> %i", map[y_axis*16+(x_axis-57)], y_axis*16+(x_axis-57));
-	    mvprintw(30, 0, status_text);
-        sprintf(temp_str, "Getn: %ld", temp);
-        mvprintw(31, 0, temp_str);
         move(y_axis, x_axis);
         refresh();
 
         u_in = getch();
 
-        move_controller(u_in, &y_axis, &x_axis, &offset, map, &temp);
+        move_controller(u_in, &y_axis, &x_axis, &offset, map);
     }
 
     if (munmap(map, fd) == -1) {
@@ -53,7 +48,7 @@ char *map_file(char *filePath, int *fd, int *fs) {
     // Open file.
     *fd = open(filePath, O_RDWR);
     if (*fd == -1) {
-    	perror("Error opening file.");
+    	perror("Error opening file");
 	    return(NULL);
     }
 
@@ -65,7 +60,7 @@ char *map_file(char *filePath, int *fd, int *fs) {
     char *map = mmap(0, *fs, PROT_READ | PROT_WRITE, MAP_SHARED, *fd, 0);
     if (map == MAP_FAILED) {
     	close(*fd);
-	    perror("Error mapping file.");
+	    perror("Error mapping file");
 	    return(NULL);
     }
 
@@ -81,9 +76,9 @@ char *map_file(char *filePath, int *fd, int *fs) {
 * @param offset Value for the offset that indicates file line position.
 *
 */
-void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map, long *temp) {
+void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map) {
     int x_position = 0;
-    long binary_value = 0;
+    long byte_value = 0;
 
     switch(u_in) {
         case(KEY_UP):
@@ -130,14 +125,14 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map,
                 }
             } else {
                 if ((u_in >= 48 && u_in <= 57) || (u_in >= 65 && u_in <= 70) || (u_in >= 97 && u_in <= 102)) {
-                    //map[*y_axis*16+*x_axis-16] = u_in; // Check this line.
-                    x_position = check_x_position(*x_axis, *y_axis, &binary_value);
+                    x_position = change_bytes(*x_axis, *y_axis, &byte_value, (char)u_in);
+                    
                     if (x_position == -1) {
                         printf("Error reading new position");
                         exit(EXIT_FAILURE);
                     }
-                    *temp = binary_value;
-                    map[(*y_axis+*offset)*16+x_position] = (char)binary_value;
+                    map[(*y_axis+*offset)*16+x_position] = (char)byte_value;
+                    
                     if (*x_axis < 56) {
                         *x_axis += 1;
                         for (int i=1; i <= 16; i++) {
@@ -152,21 +147,19 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map,
 	}
 }
 
-int check_x_position(int x_axis, int y_axis, long *byte_value) {
+int change_bytes(int x_axis, int y_axis, long *byte_value, char u_in) {
     int x_value = -1, counter = 9;
-    char first_num, second_num, binary[3];
+    char complement, binary[3];
 
     for (int i=0; i<16; i++) {
         if (x_axis == counter) {
-            first_num = (char)mvinch(y_axis, x_axis);
-            second_num = (char)mvinch(y_axis, x_axis+1);
-            sprintf(binary, "%c%c", first_num, second_num);
+            complement = (char)mvinch(y_axis, x_axis+1);
+            sprintf(binary, "%c%c", u_in, complement);
             *byte_value = strtol(binary, NULL, 16);
             x_value = i;
         } else if (x_axis == counter+1) {
-            first_num = (char)mvinch(y_axis, x_axis-1);
-            second_num = (char)mvinch(y_axis, x_axis);
-            sprintf(binary, "%c%c", first_num, second_num);
+            complement = (char)mvinch(y_axis, x_axis-1);
+            sprintf(binary, "%c%c", complement, u_in);
             *byte_value = strtol(binary, NULL, 16);
             x_value = i;
         }

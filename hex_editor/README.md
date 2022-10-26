@@ -1,17 +1,12 @@
 # Hex editor
 
-> If the hex editor breaks your terminal, run: `stty sane`.
+A quick implementation of an hexadecimal editor created with C. This repo contains test files with different byte sizes on the `hex_editor/test_files/` directory, the byte size of this file appears on their name. For example, `test_1k` indicates this file has 1,000 bytes, to create files of any given size in MacOS run the following command:
 
-El archivo checkSum.c hace una suma sobre el archivo que se da como argumento. Es una suma simple de los bytes en el archivo.
-Se compila con:
-  gcc -o checkSum checkSum.c
-  
-El archivo hexEditor.c es el esqueleto para un editor hexadecimal de archivos. Se da el archivo a editar como argumento del programa.
+``` Shell
+dd if=/dev/zero of=new_file_name bs=100 count=1
+```
 
-Se compila con:
-  gcc -o hexEditor hexEditor.c -lncurses
-
-A quick implementation of an hexadecimal editor created with C.
+The block size (`bs`) you indicate in the previous command indicates the size of your new file. By assigning the input file (`if`) called `/dev/zero` we indicate that all bytes on our new file should be zero. 
 
 ## Run the code
 
@@ -30,11 +25,13 @@ make
 Once you have the executable version run it with:
 
 ``` Shell
-./messenger.exe ${FILE}
+./hex_editor.exe ${FILE}
 ```
 
 Here the `${FILE}` parameter represents the file you want to open. The src files are spread all over the place to follow a modular architecture and follow what I currently consider best practices. When running the code from `run.sh` a file called `hex_editor/example` gets opened in the editor by default.
 
+> If the hex editor breaks your terminal, run: `stty sane`. This command is automatically used if you execute the `run.sh` script.
+
 ## Teacher instructions
 
-Create an hexadecimal editor with capacity to...
+Create an hexadecimal editor that allows changes the memory of file being edited.
