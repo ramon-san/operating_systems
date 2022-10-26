@@ -24,8 +24,8 @@ int edit(char *filename) {
         move(y_axis, x_axis);
         refresh();
 
-        u_in = leeChar();
-        // u_in = getch();
+        //u_in = leeChar();
+        u_in = getch();
 
         move_controller(u_in, &y_axis, &x_axis, &offset, map);
     }
@@ -80,6 +80,8 @@ char *map_file(char *filePath, int *fd, int *fs) {
 *
 */
 void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map) {
+    // x_position = 0;
+
     switch(u_in) {
         case(KEY_UP):
             if (*y_axis > 0) {
@@ -116,10 +118,17 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map)
                 if (u_in != 27) {
                     map[*y_axis*16+(*x_axis-57)] = (char)u_in;
                     *x_axis += 1;
+                    if (*x_axis > 72) {
+                        *x_axis = 57;
+                        if (*y_axis < 24) {
+                            *y_axis += 1;
+                        } else *offset += 1;
+                    }
                 }
             } else {
                 if ((u_in >= 48 && u_in <= 57) || (u_in >= 65 && u_in <= 70) || (u_in >= 97 && u_in <= 102)) {
                     // map[*y_axis * 16 + *x_axis - 16] = u_in; // Check this line.
+                    // x_position = check_x_position(x_axis);
                     if (*x_axis < 72) {
                         *x_axis += 1;
                         for (int i=1; i <= 16; i++) {
@@ -134,20 +143,24 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map)
 	}
 }
 
-int leeChar() {
-  int chars[5];
-  int ch,i=0;
-  nodelay(stdscr, TRUE);
-  while((ch = getch()) == ERR); /* Espera activa */
-  ungetch(ch);
-  while((ch = getch()) != ERR) {
-    chars[i++]=ch;
-  }
-  /* convierte a numero con todo lo leido */
-  int res=0;
-  for(int j=0;j<i;j++) {
-    res <<=8;
-    res |= chars[j];
-  }
-  return res;
-}
+// int check_x_position(int x_axis) {
+//     return 0;
+// }
+
+// int leeChar() {
+//   int chars[5];
+//   int ch,i=0;
+//   nodelay(stdscr, TRUE);
+//   while((ch = getch()) == ERR); /* Espera activa */
+//   ungetch(ch);
+//   while((ch = getch()) != ERR) {
+//     chars[i++]=ch;
+//   }
+//   /* convierte a numero con todo lo leido */
+//   int res=0;
+//   for(int j=0;j<i;j++) {
+//     res <<=8;
+//     res |= chars[j];
+//   }
+//   return res;
+// }
