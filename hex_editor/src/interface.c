@@ -115,10 +115,7 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map)
             if (*x_axis >= 56 && *x_axis <= 72) {
                 if (u_in != 27) {
                     map[*y_axis*16+(*x_axis-57)] = (char)u_in;
-                    // endwin();
-                    // printf("%i, with %c", *y_axis*16+(*x_axis-57), (char)u_in);
-                    // exit(1);
-                    // map[1] = u_in;
+                    *x_axis += 1;
                 }
             } else {
                 if ((u_in >= 48 && u_in <= 57) || (u_in >= 65 && u_in <= 70) || (u_in >= 97 && u_in <= 102)) {
