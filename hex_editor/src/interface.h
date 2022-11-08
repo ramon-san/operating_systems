@@ -37,5 +37,15 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map)
 */
 
 int change_bytes(int x_axis, int y_axis, long *byte_value, char u_in);
+/**
+ * Function to change byte value if edited directly as hex value.
+ * 
+ * @param x_axis        Horizontal position.
+ * @param y_axis        Vertical position.
+ * @param byte_value    Memory position to save current byte value.
+ * @param u_in          User input value.
+ * 
+ * @return New value for x position in screen.
+ */
 
 #endif

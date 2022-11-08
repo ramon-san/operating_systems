@@ -153,16 +153,28 @@ void move_controller(int u_in, int *y_axis, int *x_axis, int *offset, char *map)
 	}
 }
 
+/**
+ * Function to change byte value if edited directly as hex value.
+ * 
+ * @param x_axis        Horizontal position.
+ * @param y_axis        Vertical position.
+ * @param byte_value    Memory position to save current byte value.
+ * @param u_in          User input value.
+ * 
+ * @return New value for x position in screen.
+ */
 int change_bytes(int x_axis, int y_axis, long *byte_value, char u_in) {
     int x_value = -1, counter = 9;
     char complement, binary[3];
 
     for (int i=0; i<16; i++) {
+        /* Condition if changing first position of hex. */
         if (x_axis == counter) {
             complement = (char)mvinch(y_axis, x_axis+1);
             sprintf(binary, "%c%c", u_in, complement);
             *byte_value = strtol(binary, NULL, 16);
             x_value = i;
+        /* Condition if changing second position of hex. */
         } else if (x_axis == counter+1) {
             complement = (char)mvinch(y_axis, x_axis-1);
             sprintf(binary, "%c%c", complement, u_in);
