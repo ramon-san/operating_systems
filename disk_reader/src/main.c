@@ -6,8 +6,8 @@ int main() {
    int c;
    initscr();
    raw();
-   noecho(); /* No muestres el caracter leido */
-   cbreak(); /* Haz que los caracteres se le pasen al usuario */
+   noecho(); /* Don't show read character. */
+   cbreak(); /* Make characters pass to the user. */
    do {
       for (int j=0; j < 4; j++) {
          if (j == i) {
@@ -18,7 +18,7 @@ int main() {
       }
       move(5+i,5);
       refresh();
-      c = leeChar();
+      c = read_char();
       switch(c) {
          case 0x1B5B41:
             i = (i>0) ? i - 1 : 3;
