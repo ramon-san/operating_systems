@@ -26,7 +26,6 @@ void print_screen(char *map, int *offset, int fr, int *y_axis, int *x_axis, char
 		}
 	}
 	
-
     // Create lines for editor screen.
     for(int i=0; i<25; i++) {
         // Create line, base, and offset.
@@ -34,13 +33,14 @@ void print_screen(char *map, int *offset, int fr, int *y_axis, int *x_axis, char
         mvprintw(i, 0, l); // values are y-axis, x-axis, and content.
     }
     sprintf(status_text, "Located in y = %i and x = %i (%i).", *y_axis, *x_axis, *offset);
-    mvprintw(27, 0, status_text);
+    mvprintw(26, 0, status_text);
 	sprintf(status_text, "Map address: %p", map);
-	mvprintw(29, 0, status_text);
+	mvprintw(28, 0, status_text);
+	mvprintw(30, 0, "Move to: ");
     attron(A_STANDOUT | A_UNDERLINE);
-    mvprintw(31, 0, filename);
+    mvprintw(32, 0, filename);
     attroff(A_STANDOUT | A_UNDERLINE);
-	mvprintw(33, 0, "Exit editor with [ESC].");
+	mvprintw(34, 0, "[TAB]: search | [ESC]: exit");
 }
 
 /**

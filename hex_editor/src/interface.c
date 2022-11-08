@@ -3,7 +3,7 @@
 
 int edit(char *filename) {
     int fd, fs, fr; // File controller variables (descriptor, size, and rows).
-    int u_in = 0, y_axis = 0, x_axis = 9, offset = 0;
+    int u_in = 0, y_axis = 0, x_axis = 9, offset = 0, address;
     char status_text[35], temp_str[20];
 
     // Read file.
@@ -23,8 +23,23 @@ int edit(char *filename) {
         refresh();
 
         u_in = getch();
-
-        move_controller(u_in, &y_axis, &x_axis, &offset, map);
+        if (u_in == 9) {
+            address = input_address();
+            if (round(address/16) > fr) {
+                attron(A_STANDOUT | A_UNDERLINE);
+                mvprintw(30, 9, "Bad memory");
+                attroff(A_STANDOUT | A_UNDERLINE);
+            }
+            else if (round(address/16) <= 24) {
+                offset = 0;
+            } else {
+                offset = round(address/16)-24;
+            }
+            y_axis = 24;
+            x_axis = 9;
+        } else {
+            move_controller(u_in, &y_axis, &x_axis, &offset, map);
+        }
     }
 
     if (munmap(map, fd) == -1) {
@@ -184,4 +199,29 @@ int change_bytes(int x_axis, int y_axis, long *byte_value, char u_in) {
         counter += 3;
     }
     return x_value;
+}
+
+/**
+ * Function to get user input for address change.
+ * 
+ * @return Decimal number with desired address.
+ */
+int input_address() {
+    int u_in, flag = 1, location, counter = 0;
+    char location_string[11] = "0x00000000";
+
+    mvprintw(30, 9, "0x00000000");
+    move(30, 19);
+    while (flag) {
+        move(30, 18-counter);
+        u_in = getch();
+        if ((u_in >= 48 && u_in <= 57) || (u_in >= 65 && u_in <= 70) || (u_in >= 97 && u_in <= 102)) {
+            printw("%c", (char)u_in);
+            location_string[9-counter] = (char)u_in;
+            counter++;
+        }
+        location = strtol(location_string, NULL, 16);
+        if ((location >= 0 && u_in == 10) || counter == 8) flag = 0;
+    }
+    return location;
 }

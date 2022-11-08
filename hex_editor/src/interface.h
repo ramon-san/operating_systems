@@ -48,4 +48,6 @@ int change_bytes(int x_axis, int y_axis, long *byte_value, char u_in);
  * @return New value for x position in screen.
  */
 
+int input_address();
+
 #endif
