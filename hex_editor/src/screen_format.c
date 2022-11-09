@@ -8,7 +8,7 @@
 * @param fr     File size of what we're editing.
 *
 */
-void print_screen(char *map, int *offset, int fr, int *y_axis, int *x_axis, char *filename) {
+void print_screen(char *map, int *offset, long fr, int *y_axis, int *x_axis, char *filename) {
     char status_text[35];
 
 	// Check overflow logic to limit things for given file size.
@@ -33,7 +33,9 @@ void print_screen(char *map, int *offset, int fr, int *y_axis, int *x_axis, char
         mvprintw(i, 0, l); // values are y-axis, x-axis, and content.
     }
     sprintf(status_text, "Located in y = %i and x = %i (%i).", *y_axis, *x_axis, *offset);
-    mvprintw(26, 0, status_text);
+    move(26, 0);
+	clrtoeol();
+	mvprintw(26, 0, status_text);
 	sprintf(status_text, "Map address: %p", map);
 	mvprintw(28, 0, status_text);
 	mvprintw(30, 0, "Move to: ");

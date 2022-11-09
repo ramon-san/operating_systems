@@ -49,5 +49,10 @@ int change_bytes(int x_axis, int y_axis, long *byte_value, char u_in);
  */
 
 int input_address();
+/**
+ * Function to get user input for address change.
+ * 
+ * @return Decimal number with desired address.
+ */
 
 #endif

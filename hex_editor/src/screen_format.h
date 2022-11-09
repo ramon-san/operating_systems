@@ -11,7 +11,7 @@
 #include <curses.h>
 #include <math.h>
 
-void print_screen(char *map, int *offset, int fs, int *y_axis, int *x_axis, char *filename);
+void print_screen(char *map, int *offset, long fr, int *y_axis, int *x_axis, char *filename);
 /**
 * Function to print editor screen.
 *

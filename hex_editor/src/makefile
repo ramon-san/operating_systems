@@ -4,7 +4,7 @@
 
 CC = gcc
 LINKERS = -lncurses
-# FLAGS = -C0
+#CFLAGS = -C0
 
 deps = $(wildcard *.c)
 BINS = $(deps:%.c=%.o)
@@ -13,11 +13,11 @@ all: ${BINS} hex_editor.exe
 
 ${BINS}: ${deps}
 	@echo "\nGenerating binary objects."
-	${CC} -c $^
+	${CC} ${CFLAGS} -c $^ 
 
 hex_editor.exe: ${BINS}
 	@echo "\nGenerating executable."
-	${CC} $^ -o $@ ${LINKERS}
+	${CC} ${LDFLAGS} $^ -o $@ ${LINKERS}
 	@echo "\n"
 
 clean:
