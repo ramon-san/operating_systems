@@ -9,7 +9,7 @@
 *
 */
 void print_screen(char *map, int *offset, long fr, int *y_axis, int *x_axis, char *filename) {
-    char status_text[35];
+    char status_text[100];
 
 	// Check overflow logic to limit things for given file size.
     if (fr <= 25) {
@@ -33,7 +33,7 @@ void print_screen(char *map, int *offset, long fr, int *y_axis, int *x_axis, cha
         move(i, 0);
 		addstr(l); // values are y-axis, x-axis, and content.
     }
-    //sprintf(status_text, "Located in y = %i and x = %i (%i).", *y_axis, *x_axis, *offset);
+    sprintf(status_text, "Located in y = %i and x = %i (%i).", *y_axis, *x_axis, *offset);
     move(26, 0);
 	clrtoeol();
 	mvprintw(26, 0, status_text);
