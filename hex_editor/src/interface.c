@@ -4,7 +4,7 @@
 int edit(char *filename) {
     int fd, fs;
     long fr; // File controller variables (descriptor, size, and rows).
-    int u_in = 0, y_axis = 0, x_axis = 9, offset = 0, address;
+    int u_in = 0, y_axis = 0, x_axis = 9, offset = 0, address, tt;
     char status_text[35], temp_str[20];
 
     // Read file.
@@ -24,6 +24,9 @@ int edit(char *filename) {
         refresh();
 
         u_in = getch();
+        if (offset==586) {
+            tt=5;
+        }
         if (u_in == 9) {
             address = input_address();
             if (round(address/16) > fr) {

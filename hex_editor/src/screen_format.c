@@ -30,9 +30,10 @@ void print_screen(char *map, int *offset, long fr, int *y_axis, int *x_axis, cha
     for(int i=0; i<25; i++) {
         // Create line, base, and offset.
         char *l = make_line(map, *offset*16+i*16);
-        mvprintw(i, 0, l); // values are y-axis, x-axis, and content.
+        move(i, 0);
+		addstr(l); // values are y-axis, x-axis, and content.
     }
-    sprintf(status_text, "Located in y = %i and x = %i (%i).", *y_axis, *x_axis, *offset);
+    //sprintf(status_text, "Located in y = %i and x = %i (%i).", *y_axis, *x_axis, *offset);
     move(26, 0);
 	clrtoeol();
 	mvprintw(26, 0, status_text);
