@@ -2,6 +2,7 @@
 #ifndef mbr_reader_h
 #define mbr_reader_h
 
+// Import libraries to be used.
 #include <stdlib.h>
 #include <stdio.h>
 #include <fcntl.h>

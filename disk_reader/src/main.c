@@ -1,16 +1,15 @@
-#include "my_curses.h"
 #include "mbr_reader.h"
+#include "screen_format.h"
 
 int main(int argc, char const *argv[]) {
    int fd, fs;
    mbr_register partitions[4];
-   char *lista[] = {"Uno", "Dos", "Tres", "Cuatro" };
-   int i = 0;
-   int c;
-   initscr();
-   raw();
-   noecho(); /* Don't show read character. */
-   cbreak(); /* Make characters pass to the user. */
+   int u_in = 0, c = 0, indexer = 0, screen = 0;
+   char string[10];
+   initscr(); // Make standard screen (stdscr) for ncurses.
+	cbreak();
+	keypad(stdscr, TRUE);
+	noecho();
 
    /* File is given as a parameter. */
    if (argc != 2) {
@@ -30,45 +29,30 @@ int main(int argc, char const *argv[]) {
 
    extract_mbr(map, partitions);
 
-   do {
-      mvprintw(2, 5, "Name");
-      mvprintw(2, 20, "LBA");
-      mvprintw(2, 35, "Size");
-
-      for (int j=0; j < 4; j++) {
-         char part_name[12], part_size[13], part_start[13];
-
-         if (j == i) attron(A_REVERSE);
-         
-         sprintf(part_name, "Partition %d", j);
-         mvprintw(4+j, 5, part_name);
-         if (partitions[j].size + partitions[j].lba == 0) {
-            sprintf(part_size, "NaN");
-            sprintf(part_start, "NaN");
-         } else {
-            sprintf(part_size, "%d bytes", partitions[j].size);
-            sprintf(part_start, "%d", partitions[j].lba);
+   while (u_in != 27) {
+      if (screen == 0) {
+         mvprintw(2, 5, "Welcome to the disk reader! Press [ENTER] to continue...");
+         if (u_in == 10) {
+            screen = 1;
+            move(2, 0);
+            clrtoeol();
+            print_mbr(partitions, &indexer, u_in);
          }
-         mvprintw(4+j, 20, part_start);
-         mvprintw(4+j, 35, part_size);
+      }
+      u_in = getch();
+      if (screen != 0) {
+         switch (screen) {
+            case 1:
+               print_mbr(partitions, &indexer, u_in);
+               break;
+            default:
+               break;
+         }
          
-         attroff(A_REVERSE);
       }
-      move(4+i, 5);
-      refresh();
-      c = read_char();
-      if (c == 'Q') c = 'q';
-      switch(c) {
-         case 0x1B5B41: // Down arrow key.
-            i = (i>0) ? i - 1 : 3;
-            break;
-         case 0x1B5B42: // Up arrow key.
-            i = (i<3) ? i + 1 : 0;
-            break;
-         default:
-            break; // Nothing 
-      }
-   } while (c != 'q');
+      // sprintf(string, "_ %i", u_in);
+      // mvprintw(9, 5, string);
+   }
    endwin();
    return 0;
 }
