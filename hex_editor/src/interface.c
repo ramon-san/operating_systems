@@ -4,7 +4,7 @@
 int edit(char *filename) {
     int fd, fs;
     long fr; // File controller variables (descriptor, size, and rows).
-    int u_in = 0, y_axis = 0, x_axis = 9, offset = 0, address, tt;
+    int u_in = 0, y_axis = 0, x_axis = 9, offset = 0, address;
     char status_text[35], temp_str[20];
 
     // Read file.
