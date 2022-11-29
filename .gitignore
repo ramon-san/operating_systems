@@ -60,3 +60,4 @@ dkms.conf
 # Big disk files to ignore.
 hfs_plus.img
 nfts.img
+hfs_plus_two_partitions.img

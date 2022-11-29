@@ -59,7 +59,7 @@ int check_mbr(char *file) {
 * @return If successful 1 else 0.
 */
 void extract_mbr(char *file, mbr_register partitions[4]) {
-    int pts = 446; // Partition table start.
+    int pts = 0x1be; // Partition table start.
     
     for (int i = 0; i < 4; i++) {
         char file_start[11] = "0x", file_size[11] = "0x";
