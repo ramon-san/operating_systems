@@ -10,6 +10,11 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
+typedef struct mbr_register {
+    int lba; // Logical Block Address of the start sector.
+    int size;
+} mbr_register;
+
 char *map_file(char *file_path, int *fd, int *fs);
 /**
 * Function to open file and map its memory.
@@ -30,7 +35,7 @@ int check_mbr(char *file);
 * @return If successful 1 else 0.
 */
 
-int extract_mbr(char *file);
+void extract_mbr(char *file, mbr_register partitions[4]);
 /**
 * Function to extract document information from MBR.
 *

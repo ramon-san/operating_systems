@@ -3,6 +3,7 @@
 
 int main(int argc, char const *argv[]) {
    int fd, fs;
+   mbr_register partitions[4];
    char *lista[] = {"Uno", "Dos", "Tres", "Cuatro" };
    int i = 0;
    int c;
@@ -27,34 +28,46 @@ int main(int argc, char const *argv[]) {
       exit(EXIT_FAILURE);
    }
 
-   extract_mbr(map);
+   extract_mbr(map, partitions);
 
    do {
+      mvprintw(2, 5, "Name");
+      mvprintw(2, 20, "LBA");
+      mvprintw(2, 35, "Size");
+
       for (int j=0; j < 4; j++) {
-         if (j == i) {
-           attron(A_REVERSE);
+         char part_name[12], part_size[13], part_start[13];
+
+         if (j == i) attron(A_REVERSE);
+         
+         sprintf(part_name, "Partition %d", j);
+         mvprintw(4+j, 5, part_name);
+         if (partitions[j].size + partitions[j].lba == 0) {
+            sprintf(part_size, "NaN");
+            sprintf(part_start, "NaN");
+         } else {
+            sprintf(part_size, "%d bytes", partitions[j].size);
+            sprintf(part_start, "%d", partitions[j].lba);
          }
-         mvprintw(5+j,5,lista[j]);
+         mvprintw(4+j, 20, part_start);
+         mvprintw(4+j, 35, part_size);
+         
          attroff(A_REVERSE);
       }
-      move(5+i,5);
+      move(4+i, 5);
       refresh();
       c = read_char();
+      if (c == 'Q') c = 'q';
       switch(c) {
-         case 0x1B5B41:
+         case 0x1B5B41: // Down arrow key.
             i = (i>0) ? i - 1 : 3;
             break;
-         case 0x1B5B42:
+         case 0x1B5B42: // Up arrow key.
             i = (i<3) ? i + 1 : 0;
             break;
          default:
-            // Nothing 
-            break;
+            break; // Nothing 
       }
-      move(10,5);
-      printw("Estoy en %d: Lei %d",i,c);
-      move(11,5);
-      printw("Reading %c", map[i]);
    } while (c != 'q');
    endwin();
    return 0;

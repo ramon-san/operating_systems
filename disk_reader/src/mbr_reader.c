@@ -58,6 +58,24 @@ int check_mbr(char *file) {
 *
 * @return If successful 1 else 0.
 */
-int extract_mbr(char *file) {
-    return 0;
+void extract_mbr(char *file, mbr_register partitions[4]) {
+    int pts = 446; // Partition table start.
+    
+    for (int i = 0; i < 4; i++) {
+        char file_start[11] = "0x", file_size[11] = "0x";
+        mbr_register current_partition;
+        pts += i*16;
+        for (int j = 0; j < 4; j++) {
+            char start_ch[3], size_ch[3]; 
+            unsigned char a = file[pts+11-j], b = file[pts+15-j]; 
+            sprintf(start_ch, "%02x", a);
+            sprintf(size_ch, "%02x", b);
+            strlcat(file_size, size_ch, sizeof(file_size));
+            strlcat(file_start, start_ch, sizeof(file_start));
+        }
+        current_partition.lba = strtol(file_start, NULL, 16);
+        current_partition.size = strtol(file_size, NULL, 16);
+        
+        partitions[i] = current_partition;
+    }
 }
