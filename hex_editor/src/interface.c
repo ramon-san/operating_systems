@@ -24,9 +24,6 @@ int edit(char *filename) {
         refresh();
 
         u_in = getch();
-        if (offset==586) {
-            tt=5;
-        }
         if (u_in == 9) {
             address = input_address();
             if (round(address/16) > fr) {
@@ -212,16 +209,19 @@ int change_bytes(int x_axis, int y_axis, long *byte_value, char u_in) {
  */
 int input_address() {
     int u_in, flag = 1, location, counter = 0;
-    char location_string[11] = "0x00000000";
+    char location_string[11] = "0x0";
 
-    mvprintw(30, 9, "0x00000000");
+    move(30, 0);
+    clrtoeol();
+    mvprintw(30, 0, "Move to: ");
+    mvprintw(30, 9, location_string);
     move(30, 19);
     while (flag) {
-        move(30, 18-counter);
+        move(30, 11+counter);
         u_in = getch();
         if ((u_in >= 48 && u_in <= 57) || (u_in >= 65 && u_in <= 70) || (u_in >= 97 && u_in <= 102)) {
             printw("%c", (char)u_in);
-            location_string[9-counter] = (char)u_in;
+            location_string[3+counter] = (char)u_in;
             counter++;
         }
         location = strtol(location_string, NULL, 16);
