@@ -332,4 +332,6 @@ int move_to_partition(char *disk, mbr_register partition_info);
 
 HFSPlusVolumeHeader hfs_plus_info(char *disk, int location);
 
+int move_to_catalog_file(UInt32 block_size, UInt32 start_block, int start);
+
 #endif

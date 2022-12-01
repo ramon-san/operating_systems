@@ -32,3 +32,11 @@ HFSPlusVolumeHeader hfs_plus_info(char *disk, int location) {
     
     return part_info;
 }
+
+int move_to_catalog_file(UInt32 block_size, UInt32 start_block, int start) {
+    int location, offset = 0x400;
+
+    location = block_size*start_block+start-offset;
+
+    return location;
+}

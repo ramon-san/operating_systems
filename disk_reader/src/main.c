@@ -7,6 +7,8 @@ int main(int argc, char const *argv[]) {
    mbr_register partitions[4];
    int u_in = 0, c = 0, indexer = 0, screen = 0, location = 0;
    char string[10];
+   HFSPlusVolumeHeader vol_header;
+   UInt32 start_block, block_size; // Used to get catalog file.
    initscr(); // Make standard screen (stdscr) for ncurses.
 	cbreak();
 	keypad(stdscr, TRUE);
@@ -51,17 +53,26 @@ int main(int argc, char const *argv[]) {
                      break;
                   } else {
                      location = move_to_partition(map, partitions[indexer]);
-                     screen = 2;
-                     u_in = 0;
-                     clear();
-                     // hfs_plus_info(map, location);
+                     change_screen(&screen, 2, &u_in);
                   }
                } else break;
             case 2:
+               vol_header = hfs_plus_info(map, location);
                if (u_in == 10) {
-                  screen = 3;
+                  start_block = BIG_ENDIAN_32(vol_header.catalogFile.extents[0].startBlock);
+                  block_size = BIG_ENDIAN_32(vol_header.blockSize);
+                  location = move_to_catalog_file(block_size, start_block, location);
+                  change_screen(&screen, 3, &u_in);
                } else {
-                  print_volume_header(hfs_plus_info(map, location));
+                  print_volume_header(vol_header);
+                  break;
+               }
+            case 3:
+               if (u_in == 10) {
+                  screen = 4;
+               } else {
+                  print_int(2, location);
+                  print_catalog_file();
                   break;
                }
             default:
@@ -71,8 +82,6 @@ int main(int argc, char const *argv[]) {
          }
          refresh();
       }
-      // sprintf(string, "_ %i", u_in);
-      // mvprintw(9, 5, string);
    }
    endwin();
    return 0;
