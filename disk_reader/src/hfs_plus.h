@@ -1,4 +1,12 @@
+// Define header file if not defined.
+#ifndef hfs_plus_h
+#define hfs_plus_h
+
+// Import libraries to be used.
+#include <stdbool.h>
+
 #include "finder_info.h"
+#include "mbr_reader.h"
 
 #define BIG_ENDIAN_16(n) ((UInt16) (((n & 0xFF) << 8) | \
                                             ((n & 0xFF00) >> 8)))
@@ -9,7 +17,7 @@
 #define BIG_ENDIAN_64(n) ((UInt64) (BIG_ENDIAN_LONG(n >> 32) | \
                                 ((UInt64) BIG_ENDIAN_LONG(n & 0xFFFFFFFF)) << 32))
 
-#pragma pack(push,1)
+#pragma pack(push,1) // Used to avoid padding files as specified by Apple.
 
 typedef UInt16 UniChar;
 struct HFSUniStr255 {
@@ -81,7 +89,7 @@ typedef struct HFSPlusForkData HFSPlusForkData;
 
 typedef UInt32 HFSCatalogNodeID;
 
-struct HFSPlusVolumeHeader {
+struct HFSPlusVolumeHeader { // Struct with size of 512 bytes.
     UInt16              signature;
     UInt16              version;
     UInt32              attributes;
@@ -319,3 +327,9 @@ enum {
 };
 
 #pragma pack(pop)
+
+int move_to_partition(char *disk, mbr_register partition_info);
+
+HFSPlusVolumeHeader hfs_plus_info(char *disk, int location);
+
+#endif

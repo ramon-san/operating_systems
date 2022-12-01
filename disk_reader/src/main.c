@@ -1,10 +1,11 @@
 #include "mbr_reader.h"
 #include "screen_format.h"
+#include "hfs_plus.h"
 
 int main(int argc, char const *argv[]) {
    int fd, fs;
    mbr_register partitions[4];
-   int u_in = 0, c = 0, indexer = 0, screen = 0;
+   int u_in = 0, c = 0, indexer = 0, screen = 0, location = 0;
    char string[10];
    initscr(); // Make standard screen (stdscr) for ncurses.
 	cbreak();
@@ -44,11 +45,31 @@ int main(int argc, char const *argv[]) {
          switch (screen) {
             case 1:
                print_mbr(partitions, &indexer, u_in);
-               break;
+               if (u_in == 10) {
+                  if (partitions[indexer].size == 0) {
+                     mvprintw(9, 5, "Empty partition, can't open.");
+                     break;
+                  } else {
+                     location = move_to_partition(map, partitions[indexer]);
+                     screen = 2;
+                     u_in = 0;
+                     clear();
+                     // hfs_plus_info(map, location);
+                  }
+               } else break;
+            case 2:
+               if (u_in == 10) {
+                  screen = 3;
+               } else {
+                  print_volume_header(hfs_plus_info(map, location));
+                  break;
+               }
             default:
+               printf("\nUnknown screen location (%d)...\n\n", screen);
+               exit(EXIT_FAILURE);
                break;
          }
-         
+         refresh();
       }
       // sprintf(string, "_ %i", u_in);
       // mvprintw(9, 5, string);
