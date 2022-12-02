@@ -74,17 +74,55 @@ void print_volume_header(HFSPlusVolumeHeader info) {
     mvprintw(6, 5, file_cnt_text);
     mvprintw(7, 5, folder_cnt_text);
     mvprintw(9, 5, "Press [ENTER] to continue...");
+
+    return;
 }
 
 /**
  * Function to print disk catalog file.
  * 
- * @param 
+ * @param info  Fork data with catalog file information.
  * 
  */
-void print_catalog_file() {
+void print_catalog_file(HFSPlusForkData info) {
+    char ls_text[30], cs_text[30], total_blocks[30];
+    
+    info.logicalSize = BIG_ENDIAN_64(info.logicalSize);
+    info.clumpSize = BIG_ENDIAN_32(info.clumpSize);
+
+    sprintf(ls_text, "- Logical size: %llu", info.logicalSize);
+    sprintf(cs_text, "- Clump size: %u", info.clumpSize);
+    
+    mvprintw(2, 5, "Basic disk information:");
+    mvprintw(4, 5, ls_text);
+    mvprintw(5, 5, cs_text);
+    mvprintw(7, 5, "Press [ENTER] to continue...");
+
     return;
 }
+
+// /**
+//  * Function to print disk catalog file.
+//  * 
+//  * @param info  Node Descriptor with catalog file information.
+//  * 
+//  */
+// void print_catalog_file(BTNodeDescriptor info) {
+//     char flink_text[30], blink_text[30];
+    
+//     info.fLink = BIG_ENDIAN_16(info.fLink);
+//     info.bLink = BIG_ENDIAN_16(info.bLink);
+
+//     sprintf(flink_text, "- Fwd link: %d", info.fLink);
+//     sprintf(blink_text, "- Bwd link: %d", info.bLink);
+    
+//     mvprintw(2, 5, "Basic disk information:");
+//     mvprintw(4, 5, flink_text);
+//     mvprintw(5, 5, blink_text);
+//     mvprintw(7, 5, "Press [ENTER] to continue...");
+
+//     return;
+// }
 
 /**
  * Function to change screen number and clear screen.

@@ -14,8 +14,8 @@
                                           ((n & 0xFF00) << 8) | \
                                           ((n & 0xFF0000) >> 8) | \
                                           ((n & 0xFF000000) >> 24)))
-#define BIG_ENDIAN_64(n) ((UInt64) (BIG_ENDIAN_LONG(n >> 32) | \
-                                ((UInt64) BIG_ENDIAN_LONG(n & 0xFFFFFFFF)) << 32))
+#define BIG_ENDIAN_64(n) ((UInt64) (BIG_ENDIAN_32(n >> 32) | \
+                                ((UInt64) BIG_ENDIAN_32(n & 0xFFFFFFFF)) << 32))
 
 #pragma pack(push,1) // Used to avoid padding files as specified by Apple.
 
@@ -333,5 +333,9 @@ int move_to_partition(char *disk, mbr_register partition_info);
 HFSPlusVolumeHeader hfs_plus_info(char *disk, int location);
 
 int move_to_catalog_file(UInt32 block_size, UInt32 start_block, int start);
+
+HFSPlusForkData catalog_file_info (char *disk, int location);
+
+BTNodeDescriptor node_descriptor_info(char *disk, int location);
 
 #endif

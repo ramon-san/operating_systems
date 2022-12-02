@@ -27,7 +27,13 @@ void print_volume_header(HFSPlusVolumeHeader info);
  * 
  */
 
-void print_catalog_file();
+void print_catalog_file(HFSPlusForkData info);
+/**
+ * Function to print disk catalog file.
+ * 
+ * @param info  Fork data with catalog file information.
+ * 
+ */
 
 void change_screen(int *screen, int number, int *u_in);
 /**
