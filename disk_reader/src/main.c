@@ -9,7 +9,7 @@ int main(int argc, char const *argv[]) {
    int part_location = 0, catalog_location = 0;
    char string[10];
    HFSPlusVolumeHeader vol_header;
-   HFSPlusForkData catalog_file;
+   BTHeaderRec catalog_file;
    UInt32 start_block, block_size; // Used to get catalog file.
    initscr(); // Make standard screen (stdscr) for ncurses.
 	cbreak();
@@ -65,6 +65,7 @@ int main(int argc, char const *argv[]) {
                   start_block = BIG_ENDIAN_32(vol_header.catalogFile.extents[0].startBlock);
                   block_size = BIG_ENDIAN_32(vol_header.blockSize);
                   catalog_location = move_to_catalog_file(block_size, start_block, part_location);
+                  catalog_location += sizeof(BTNodeDescriptor);
                   change_screen(&screen, 3, &u_in);
                } else {
                   print_volume_header(vol_header);
@@ -75,8 +76,7 @@ int main(int argc, char const *argv[]) {
                if (u_in == 10) {
                   screen = 4;
                } else {
-                  print_int(9, catalog_location);
-                  print_catalog_file(catalog_file);
+                  print_catalog_file(catalog_file, catalog_location-sizeof(BTNodeDescriptor));
                   break;
                }
             default:

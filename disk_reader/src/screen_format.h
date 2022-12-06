@@ -27,11 +27,12 @@ void print_volume_header(HFSPlusVolumeHeader info);
  * 
  */
 
-void print_catalog_file(HFSPlusForkData info);
+void print_catalog_file(BTHeaderRec info, int location);
 /**
  * Function to print disk catalog file.
  * 
- * @param info  Fork data with catalog file information.
+ * @param info      Fork data with catalog file information.
+ * @param location  Memory address where this structure starts.
  * 
  */
 
@@ -51,6 +52,15 @@ void print_int(int location, int to_print);
  * 
  * @param location  Row in screen where we'll print.
  * @param to_print  Integer value we want to print.
+ * 
+ */
+
+void print_hex(int location, int to_print);
+/**
+ * Function tu use in debug, prints int in given line as location.
+ * 
+ * @param location  Row in screen where we'll print.
+ * @param to_print  Hex value we want to print.
  * 
  */
 

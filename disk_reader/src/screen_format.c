@@ -82,21 +82,37 @@ void print_volume_header(HFSPlusVolumeHeader info) {
  * Function to print disk catalog file.
  * 
  * @param info  Fork data with catalog file information.
+ * @param location  Memory address where this structure starts.
  * 
  */
-void print_catalog_file(HFSPlusForkData info) {
-    char ls_text[30], cs_text[30], total_blocks[30];
+void print_catalog_file(BTHeaderRec info, int location) {
+    char ls_text[30], cs_text[30], root_node[30], total_nodes[30];
+    char first_node[30], last_node[30], catalog_location[40];
     
-    info.logicalSize = BIG_ENDIAN_64(info.logicalSize);
+    info.rootNode = BIG_ENDIAN_32(info.rootNode);
+    info.nodeSize = BIG_ENDIAN_16(info.nodeSize);
     info.clumpSize = BIG_ENDIAN_32(info.clumpSize);
+    info.totalNodes = BIG_ENDIAN_32(info.totalNodes);
+    info.firstLeafNode = BIG_ENDIAN_32(info.firstLeafNode);
+    info.lastLeafNode = BIG_ENDIAN_32(info.lastLeafNode);
 
-    sprintf(ls_text, "- Logical size: %llu", info.logicalSize);
-    sprintf(cs_text, "- Clump size: %u", info.clumpSize);
+    sprintf(catalog_location, "- Catalog file start: %x", location);
+    sprintf(root_node, "- Root node: %d", info.rootNode);
+    sprintf(ls_text, "- Node size: %x", info.nodeSize);
+    sprintf(cs_text, "- Clump size: %x", info.clumpSize);
+    sprintf(total_nodes, "- Total nodes: %x", info.totalNodes);
+    sprintf(first_node, "- First leaf node: %x", info.firstLeafNode);
+    sprintf(last_node, "- Last leaf node: %x", info.lastLeafNode);
     
-    mvprintw(2, 5, "Basic disk information:");
-    mvprintw(4, 5, ls_text);
-    mvprintw(5, 5, cs_text);
-    mvprintw(7, 5, "Press [ENTER] to continue...");
+    mvprintw(2, 5, catalog_location);
+    mvprintw(4, 5, "Basic disk information:");
+    mvprintw(6, 5, root_node);
+    mvprintw(7, 5, first_node);
+    mvprintw(8, 5, last_node);
+    mvprintw(9, 5, ls_text);
+    mvprintw(10, 5, cs_text);
+    mvprintw(11, 5, total_nodes);
+    mvprintw(13, 5, "Press [ENTER] to continue...");
 
     return;
 }
@@ -149,6 +165,20 @@ void print_int(int location, int to_print) {
     char text[15];
 
     sprintf(text, "%d", to_print);
+    mvprintw(location, 5, text);
+}
+
+/**
+ * Function tu use in debug, prints int in given line as location.
+ * 
+ * @param location  Row in screen where we'll print.
+ * @param to_print  Hex value we want to print.
+ * 
+ */
+void print_hex(int location, int to_print) {
+    char text[15];
+
+    sprintf(text, "%x", to_print);
     mvprintw(location, 5, text);
 }
 

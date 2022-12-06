@@ -334,7 +334,7 @@ HFSPlusVolumeHeader hfs_plus_info(char *disk, int location);
 
 int move_to_catalog_file(UInt32 block_size, UInt32 start_block, int start);
 
-HFSPlusForkData catalog_file_info (char *disk, int location);
+BTHeaderRec catalog_file_info (char *disk, int location);
 
 BTNodeDescriptor node_descriptor_info(char *disk, int location);
 
