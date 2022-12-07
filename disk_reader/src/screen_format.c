@@ -81,7 +81,7 @@ void print_volume_header(HFSPlusVolumeHeader info) {
 /**
  * Function to print disk catalog file.
  * 
- * @param info  Fork data with catalog file information.
+ * @param info      Header record with catalog file information.
  * @param location  Memory address where this structure starts.
  * 
  */
@@ -97,7 +97,7 @@ void print_catalog_file(BTHeaderRec info, int location) {
     info.lastLeafNode = BIG_ENDIAN_32(info.lastLeafNode);
 
     sprintf(catalog_location, "- Catalog file start: %x", location);
-    sprintf(root_node, "- Root node: %d", info.rootNode);
+    sprintf(root_node, "- Root node: %x", info.rootNode);
     sprintf(ls_text, "- Node size: %x", info.nodeSize);
     sprintf(cs_text, "- Clump size: %x", info.clumpSize);
     sprintf(total_nodes, "- Total nodes: %x", info.totalNodes);
@@ -113,6 +113,26 @@ void print_catalog_file(BTHeaderRec info, int location) {
     mvprintw(10, 5, cs_text);
     mvprintw(11, 5, total_nodes);
     mvprintw(13, 5, "Press [ENTER] to continue...");
+
+    return;
+}
+
+/**
+ * Function to print root node.
+ * 
+ * @param info      Node descriptor with root node information.
+ * @param location  Memory address where this structure starts.
+ * 
+ */
+void print_root_node(BTNodeDescriptor info) {
+    char records_text[30];
+
+    info.numRecords = BIG_ENDIAN_16(info.numRecords);
+    
+    sprintf(records_text, "- Number of Records: %x", info.numRecords);
+    
+    mvprintw(2, 5, "Root node descriptor:");
+    mvprintw(4, 5, records_text);
 
     return;
 }

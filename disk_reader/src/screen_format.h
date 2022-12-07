@@ -46,6 +46,15 @@ void change_screen(int *screen, int number, int *u_in);
  * 
  */
 
+void print_root_node(BTNodeDescriptor info);
+/**
+ * Function to print root node.
+ * 
+ * @param info      Node descriptor with root node information.
+ * @param location  Memory address where this structure starts.
+ * 
+ */
+
 void print_int(int location, int to_print);
 /**
  * Function tu use in debug, prints int in given line as location.

@@ -3,7 +3,7 @@
 
 int main() {
     struct dirent *directoryContent;
-    char *directoryName = "/Users/ramonorraca/Desktop/Ibero/Clases/2022_Otoño/SistemasOperativos";
+    char *directoryName = "/Users/ramonorraca/Desktop/ibero/clases/fall_2022/operating_systems";
     char file_type = '\0';
     DIR  *directory = opendir(directoryName);
     while ((directoryContent = readdir(directory)) != NULL) {

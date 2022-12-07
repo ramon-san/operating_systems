@@ -6,10 +6,11 @@ int main(int argc, char const *argv[]) {
    int fd, fs;
    mbr_register partitions[4];
    int u_in = 0, c = 0, indexer = 0, screen = 0;
-   int part_location = 0, catalog_location = 0;
+   int part_location = 0, catalog_location = 0, root_location = 0;
    char string[10];
    HFSPlusVolumeHeader vol_header;
    BTHeaderRec catalog_file;
+   BTNodeDescriptor root_node;
    UInt32 start_block, block_size; // Used to get catalog file.
    initscr(); // Make standard screen (stdscr) for ncurses.
 	cbreak();
@@ -74,10 +75,20 @@ int main(int argc, char const *argv[]) {
             case 3:
                catalog_file = catalog_file_info(map, catalog_location);
                if (u_in == 10) {
-                  screen = 4;
+                  catalog_file.rootNode = BIG_ENDIAN_32(catalog_file.rootNode);
+                  catalog_file.nodeSize = BIG_ENDIAN_16(catalog_file.nodeSize);
+                  root_location = catalog_location-sizeof(BTNodeDescriptor)+(catalog_file.nodeSize*catalog_file.rootNode);
+                  change_screen(&screen, 4, &u_in);
                } else {
                   print_catalog_file(catalog_file, catalog_location-sizeof(BTNodeDescriptor));
                   break;
+               }
+            case 4:
+               if (u_in == 10) {
+                  screen = 5;
+               } else {
+                  root_node = node_descriptor_info(map, root_location);
+                  print_root_node(root_node);                  break;
                }
             default:
                printf("\nUnknown screen location (%d)...\n\n", screen);
