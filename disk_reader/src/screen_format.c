@@ -118,21 +118,27 @@ void print_catalog_file(BTHeaderRec info, int location) {
 }
 
 /**
- * Function to print root node.
+ * Function to print first leaf node.
  * 
  * @param info      Node descriptor with root node information.
  * @param location  Memory address where this structure starts.
  * 
  */
-void print_root_node(BTNodeDescriptor info) {
-    char records_text[30];
-
+void print_first_leaf(BTNodeDescriptor info) {
+    char records_text[30], fl_text[30], bl_text[30];
+    
     info.numRecords = BIG_ENDIAN_16(info.numRecords);
-    
-    sprintf(records_text, "- Number of Records: %x", info.numRecords);
-    
+    info.bLink = BIG_ENDIAN_32(info.bLink);
+    info.fLink = BIG_ENDIAN_32(info.fLink);
+
+    sprintf(records_text, "- Number of records: %x", info.numRecords);
+    sprintf(fl_text, "- Forward link: %x", info.fLink);
+    sprintf(bl_text, "- Backward link: %x", info.bLink);
+
     mvprintw(2, 5, "Root node descriptor:");
     mvprintw(4, 5, records_text);
+    mvprintw(5, 5, fl_text);
+    mvprintw(6, 5, bl_text);
 
     return;
 }

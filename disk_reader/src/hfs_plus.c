@@ -73,3 +73,10 @@ BTNodeDescriptor node_descriptor_info(char *disk, int location) {
     return nd_info;
 }
 
+HFSPlusCatalogKey catalog_key_info(char *disk, int location) {
+    HFSPlusCatalogKey info;
+
+    memcpy(&info, &disk[location], sizeof(info));
+
+    return info;
+}

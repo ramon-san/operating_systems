@@ -338,4 +338,6 @@ BTHeaderRec catalog_file_info (char *disk, int location);
 
 BTNodeDescriptor node_descriptor_info(char *disk, int location);
 
+HFSPlusCatalogKey catalog_key_info(char *disk, int location);
+
 #endif

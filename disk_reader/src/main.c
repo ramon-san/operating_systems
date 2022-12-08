@@ -5,13 +5,14 @@
 int main(int argc, char const *argv[]) {
    int fd, fs;
    mbr_register partitions[4];
-   int u_in = 0, c = 0, indexer = 0, screen = 0;
+   int u_in = 0, c = 0, indexer = 0, screen = 0, file_counter = 0;
    int part_location = 0, catalog_location = 0, root_location = 0;
    char string[10];
    HFSPlusVolumeHeader vol_header;
    BTHeaderRec catalog_file;
-   BTNodeDescriptor root_node;
-   UInt32 start_block, block_size; // Used to get catalog file.
+   BTNodeDescriptor first_leaf;
+   HFSPlusCatalogKey catalog_key;
+   UInt32 start_block, block_size, file_offset = 0, file_type = 0; // Used to get catalog file.
    initscr(); // Make standard screen (stdscr) for ncurses.
 	cbreak();
 	keypad(stdscr, TRUE);
@@ -77,18 +78,51 @@ int main(int argc, char const *argv[]) {
                if (u_in == 10) {
                   catalog_file.rootNode = BIG_ENDIAN_32(catalog_file.rootNode);
                   catalog_file.nodeSize = BIG_ENDIAN_16(catalog_file.nodeSize);
-                  root_location = catalog_location-sizeof(BTNodeDescriptor)+(catalog_file.nodeSize*catalog_file.rootNode);
+                  catalog_file.firstLeafNode = BIG_ENDIAN_32(catalog_file.firstLeafNode);
+                  root_location = catalog_location-sizeof(BTNodeDescriptor)+(catalog_file.nodeSize*catalog_file.firstLeafNode);
                   change_screen(&screen, 4, &u_in);
+                  u_in = 9;
                } else {
                   print_catalog_file(catalog_file, catalog_location-sizeof(BTNodeDescriptor));
                   break;
                }
             case 4:
                if (u_in == 10) {
-                  screen = 5;
+                  change_screen(&screen, 5, &u_in);
                } else {
-                  root_node = node_descriptor_info(map, root_location);
-                  print_root_node(root_node);                  break;
+                  if (u_in == 9) {
+                     mvprintw(9, 5, "File content:");
+                     first_leaf = node_descriptor_info(map, root_location);
+                     first_leaf.numRecords = BIG_ENDIAN_16(first_leaf.numRecords);
+                     
+                     print_first_leaf(first_leaf);
+
+                     for (int i = 0; i < first_leaf.numRecords; i++) {
+                        wchar_t file_info[255];
+                        char file_text[300];
+
+                        file_counter = root_location+catalog_file.nodeSize-i*2-2;
+                        file_offset = BIG_ENDIAN_16(*((UInt16 *) &map[file_counter]));
+                        catalog_key = catalog_key_info(map, root_location+file_offset);
+                        catalog_key.nodeName.length = BIG_ENDIAN_16(catalog_key.nodeName.length);
+
+                        for (int j = 0; j < catalog_key.nodeName.length; j++) {
+                           file_info[j] = BIG_ENDIAN_16(catalog_key.nodeName.unicode[j]);
+                        }
+                        file_info[catalog_key.nodeName.length] = 0; // File ends with 0.
+                        file_type = BIG_ENDIAN_16(*((UInt16 *) &map[root_location+file_offset+BIG_ENDIAN_16(catalog_key.keyLength)+2]));
+                        sprintf(file_text, "- %i\t%x\t%ls", i, file_type, file_info);
+                        mvprintw(11+i, 10, file_text);
+                     }
+                  }
+                  break;
+               }
+            case 5:
+               if (u_in == 10) {
+                  screen = 6;
+               } else {
+                  mvprintw(2, 5, "Falta terminar esta pantalla...");
+                  break;
                }
             default:
                printf("\nUnknown screen location (%d)...\n\n", screen);
