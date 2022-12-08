@@ -8,10 +8,10 @@ Programs made for the Operating Systems course I took with [Dr. René Mac Kinney
 Inside this repository you'll find a couple of interesting projects which I think are awesome!
 
 ### [System Utils](./system_utils/)
-This is a simple program that recreates basic system utilities for a MacOS computer.
+These are three simple programs that recreates basic system utilities for MacOS.
 
 ### [Threads VS Forks](./threads_vs_forks/)
-This program let's you compare the speed between running a sorting algorithm with threads and running this same algorithm with forks.
+These are two programs let's you compare the speed between running a sorting algorithm with threads and running this same algorithm with forks.
 
 ### [Shared Memory Messenger](./shared_memory_messenger/)
 This program allows you to simulate a messenger through the use of a shared memory objects. In Linux machines this objects are found in the `/dev/shmem` directory, but in MacOS no such file exists. 
