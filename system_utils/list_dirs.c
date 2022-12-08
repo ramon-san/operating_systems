@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <dirent.h>
 
-int main() {
+int main(int argc, char const *argv[]) {
     struct dirent *directoryContent;
-    char *directoryName = "/Users/ramonorraca/Desktop/ibero/clases/fall_2022/operating_systems";
+    char *directoryName = (char *)argv[1];
     char file_type = '\0';
+    if (directoryName == NULL) directoryName = "./";
     DIR  *directory = opendir(directoryName);
     while ((directoryContent = readdir(directory)) != NULL) {
 	if (directoryContent->d_type == 4) {
 	    file_type = 'd';
 	} else if (directoryContent->d_type == 8) {
-	    file_type = '-';
+	    file_type = 'f';
 	} else {
 	    file_type = '?';
 	}
